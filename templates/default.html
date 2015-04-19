@@ -12,11 +12,12 @@
       <a href="/users">Users</a>
       <a href="/albums">Albums</a>
       <a href="/posts">Posts</a>
-      {% if 'username' in session %}
-      <a href='/user'>Profile</a>
+      {% if 'email' in session %}
+      <a href='/profile'>Profile</a>
       <a href='/logout'>Logout</a>
       {% else %}
       <a href='/login'>Login</a>
+      <a href='/register'>Register</a>
       {% endif %}
     </div>
     <hr>

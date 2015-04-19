@@ -64,9 +64,11 @@ class Post(db.Model):
 class Circle(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userid = db.Column(db.Integer)
+    circleid = db.Column(db.Integer)
 
-    def __init__(self, userid):
+    def __init__(self, userid, circleid):
 	self.userid = userid
+	self.circleid = circleid
 
     def __repr__(self):
 	return '<Circle %r>' %self.id

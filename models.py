@@ -61,6 +61,15 @@ class Post(db.Model):
     def __repr__(self):
 	return '<Post %r>' % self.id
 
+class Circle(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.Integer)
+
+    def __init__(self, userid):
+	self.userid = userid
+
+    def __repr__(self):
+	return '<Circle %r>' %self.id
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

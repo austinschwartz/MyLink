@@ -5,15 +5,15 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
-friend = db.Table('friend', 
-	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
-	db.Column('friendid', db.Integer, db.ForeignKey('User.id'))
-)
+#friend = db.Table('friend', 
+#	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
+#	db.Column('friendid', db.Integer, db.ForeignKey('User.id'))
+#)
 
-request = db.Table('request', 
-	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
-	db.Column('requestingid', db.Integer, db.ForeignKey('User.id'))
-)
+#request = db.Table('request', 
+#	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
+#	db.Column('requestingid', db.Integer, db.ForeignKey('User.id'))
+#)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -21,12 +21,9 @@ class User(db.Model):
     email = db.Column(db.Text)
     password = db.Column(db.Text)
 
-    friends = db.relationship('User', secondary = friend, primaryjoin=(friend.c.userid == id), secondaryjoin=(friend.c.friendid == id), backref = db.backref('friend', lazy='dynamic'), lazy = 'dynamic')
+    #friends = db.relationship('User', secondary = friend, primaryjoin=(friend.c.userid == id), secondaryjoin=(friend.c.friendid == id), backref = db.backref('friend', lazy='dynamic'), lazy = 'dynamic')
 
-    requests = db.relationship('User', secondary = request, primaryjoin=(request.c.userid == id), secondaryjoin=(request.c.requestingid == id), backref = db.backref('request', lazy='dynamic'), lazy = 'dynamic')
-
-
-   
+    #requests = db.relationship('User', secondary = request, primaryjoin=(request.c.userid == id), secondaryjoin=(request.c.requestingid == id), backref = db.backref('request', lazy='dynamic'), lazy = 'dynamic')
 
     def __init__(self, name, email, password):
 	self.name = name

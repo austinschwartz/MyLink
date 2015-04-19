@@ -9,9 +9,16 @@
   <body>
     <div>MyLink:
       <a href="/index">Home</a>
+      {% if 'username' in session %}
+      <a href="/logout">Logout</a>
+      {% else %}
       <a href="/login">Login</a>
+      {% endif %}
     </div>
     <hr>
     {% block content %}{% endblock %}
+    <br/><br/><br/>
+    session:<br/>
+    {{ session|tojson }}
   </body>
 </html>

@@ -1,0 +1,10 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<ul>
+{% for post in posts %}
+<li> <span> {{ post.id }} -  {{ post.text }} - {{ post.ownerid }} - {{ post.albumid }} </span> </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

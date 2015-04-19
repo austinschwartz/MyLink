@@ -27,8 +27,7 @@ class Album(db.Model):
     visibility = db.Column(db.Text)
     #users = db.relationship('users', backref = db.backref('albums', lazy = 'dynamic'))
 
-    def __init__(self, name, owner, visibility, id):
-	self.id = id
+    def __init__(self, name, owner, visibility):
         self.name=name
 	self.owner=owner
 	self.visibility=visibility
@@ -38,11 +37,12 @@ class Album(db.Model):
 
 class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text)
     album = db.Column(db.Text)
-    owner = db.Column(db.Text)
+    owner = db.Column(db.Integer)
     
-    def __init__(self, id, album, owner):
-	self.id = id
+    def __init__(self, name, album, owner):
+	self.name = name
 	self.album = album
 	self.owner = owner
 
@@ -54,8 +54,7 @@ class Session(db.Model):
     user = db.Column(db.Text)
     session = db.Column(db.Text)
 
-    def __init__(self, id, user, session):
-	self.id = id
+    def __init__(self, user, session):
 	self.user = user
 	self.owner = owner
 

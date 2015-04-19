@@ -1,7 +1,9 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request
+from models import db
 import os
 
 app = Flask(__name__)
+db.create_all()
 
 @app.route('/')
 @app.route('/index')

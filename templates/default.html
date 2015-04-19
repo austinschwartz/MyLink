@@ -8,17 +8,19 @@
   </head>
   <body>
     <div>MyLink:
-      <a href="/index">Home</a>
+      <a href='/index'>Home</a>
       {% if 'username' in session %}
-      <a href="/logout">Logout</a>
+      <a href='/user'>Profile</a>
+      <a href='/logout'>Logout</a>
       {% else %}
-      <a href="/login">Login</a>
+      <a href='/login'>Login</a>
       {% endif %}
     </div>
     <hr>
     {% block content %}{% endblock %}
     <br/><br/><br/>
     session:<br/>
-    {{ session|tojson }}
+    {{ session|tojson }} <br/>
+    users in db should be "george@gmail.com : abc123", "mary@gmail.com : mary123"</br>
   </body>
 </html>

@@ -1,4 +1,4 @@
-from models import db, User, Picture, Album, Session
+from models import db, User, Picture, Album, Session, Post
 
 db.drop_all()
 db.create_all()
@@ -16,6 +16,10 @@ db.session.add(Picture("image-89.jpg", 1 ))
 db.session.add(Picture("image-90.jpg", 1 ))
 db.session.add(Picture("image-91.jpg", 1 ))
 db.session.add(Picture("image-92.jpg", 1 ))
+db.session.add(Picture("brokenlink", 4))
+
+db.session.add(Post("Today I ate something, pictures enclosed", 1, 1))
+db.session.add(Post("Life is pain", 2, 2))
 
 db.session.commit()
 

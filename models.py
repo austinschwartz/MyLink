@@ -5,12 +5,28 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
+friend = db.Table('friend', 
+	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
+	db.Column('friendid', db.Integer, db.ForeignKey('User.id'))
+)
+
+request = db.Table('request', 
+	db.Column('userid', db.Integer, db.ForeignKey('User.id')), 
+	db.Column('requestingid', db.Integer, db.ForeignKey('User.id'))
+)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
     email = db.Column(db.Text)
     password = db.Column(db.Text)
+
+    friends = db.relationship('User', secondary = friend, primaryjoin=(friend.c.userid == id), secondaryjoin=(friend.c.friendid == id), backref = db.backref('friend', lazy='dynamic'), lazy = 'dynamic')
+
+    requests = db.relationship('User', secondary = request, primaryjoin=(request.c.userid == id), secondaryjoin=(request.c.requestingid == id), backref = db.backref('request', lazy='dynamic'), lazy = 'dynamic')
+
+
+   
 
     def __init__(self, name, email, password):
 	self.name = name
@@ -19,6 +35,8 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
+
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -63,13 +81,17 @@ class Post(db.Model):
 
 class Circle(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    circleid = db.Column(db.Integer)
+    ownerid = db.Column(db.Integer)
     userid = db.Column(db.Integer)
 
-    def __init__(self, userid):
+    def __init__(self, circleid, ownerid, userid):
 	self.userid = userid
+	self.ownerid = ownerid
+	self.circleid = circleid
 
     def __repr__(self):
-	return '<Circle %r>' %self.id
+	return '<Circle %r>' % self.id
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

@@ -1,3 +1,10 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<ul>
 {% for user in users %}
-<span> {{ user }} </span>
+<li> <span> {{ user.id }} -  {{ user.email }} </span> </li>
 {% endfor %}
+</ul>
+
+{% endblock %}

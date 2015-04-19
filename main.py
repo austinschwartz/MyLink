@@ -1,9 +1,8 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request
-from models import db
+from models import db, User
 import os
 
 app = Flask(__name__)
-db.create_all()
 
 @app.route('/')
 @app.route('/index')
@@ -17,6 +16,10 @@ def index():
 @app.route('/user')
 def user(userid=-1): # we'll let -1 mean the current user
     pass
+
+@app.route('/users')
+def users():
+    return render_template('users.html', users = User.query.all())
 
 @app.route('/post/<postid>')
 def post(postid): # no default here, error if there is no postid

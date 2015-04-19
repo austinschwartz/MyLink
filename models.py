@@ -71,7 +71,19 @@ class Circle(db.Model):
 	self.circleid = circleid
 
     def __repr__(self):
-	return '<Circle %r>' %self.id
+	return '<Circle %r>' % self.id
+
+class CircleOwner(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    circleid = db.Column(db.Integer)
+    userid = db.Column(db.Integer)
+
+    def __init(self, circleid, userid):
+	self.circleid = circleid
+	self.userid = userid
+
+    def __repr__(self):
+	return '<CircleOwner %r>' % self.id
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

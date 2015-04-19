@@ -1,15 +1,11 @@
-<html>
-<head>
-	<title> login</title>
-</head>
-<body>
-	<h1>login</h1>
-	<form action="">
-		<label for="email"> Email: </label>
-		<input type="text" name="username" id="email" /><br>
-		<label for="login-password"> password: </label>
-		<input type="password" name="password" id="password" /><br>
-		<input type="submit" value="login" />
-	</form>
-</body>
-</html>
+{% extends 'default.html' %}
+{% block content %}
+<h1>login</h1>
+<form action="">
+  <label for="email"> Email: </label>
+  <input type="text" name="username" id="email" /><br>
+  <label for="login-password"> password: </label>
+  <input type="password" name="password" id="password" /><br>
+  <input type="submit" value="login" />
+</form>
+{% endblock %}

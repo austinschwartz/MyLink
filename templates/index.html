@@ -1,4 +1,4 @@
-<html>
-<head><title>MyLink</title></head>
-<body>Hi!</body>
-</html>
+{% extends "default.html" %}
+{% block content %}
+Hi {{ user.email }}, your password is {{ user.password }}
+{% endblock %}

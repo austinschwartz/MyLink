@@ -8,14 +8,14 @@ db.session.add(User("Mary Juana", "mary@gmail.com", "mary123"))
 db.session.add(User("Peter", "peter@gmail.com", "peter134"))
 
 db.session.add(Album("album1",'george@gmail.com',"public"))
-db.session.add(Album("album1",'george@gmail.com',"public"))
-db.session.add(Album("album1",'george@gmail.com',"public"))
+db.session.add(Album("album2",'george@gmail.com',"public"))
+db.session.add(Album("album3",'george@gmail.com',"private"))
 db.session.add(Album("album1",'mary@gmail.com',"public"))
 
-db.session.add(Picture("image-89.jpg","album1", 1 ))
-db.session.add(Picture("image-90.jpg","album1", 1 ))
-db.session.add(Picture("image-91.jpg","album1", 1 ))
-db.session.add(Picture("image-92.jpg","album1", 1 ))
+db.session.add(Picture("image-89.jpg", 1 ))
+db.session.add(Picture("image-90.jpg", 1 ))
+db.session.add(Picture("image-91.jpg", 1 ))
+db.session.add(Picture("image-92.jpg", 1 ))
 
 db.session.commit()
 

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request
-from models import db, User
+from models import db, User, Album, Picture, Post
 import os
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ def index():
     else:
         return render_template('index.html')
 
+## Users
 @app.route('/user/<userid>')
 @app.route('/user')
 def user(userid=-1): # we'll let -1 mean the current user
@@ -21,14 +22,24 @@ def user(userid=-1): # we'll let -1 mean the current user
 def users():
     return render_template('users.html', users = User.query.all())
 
+
+## Posts
 @app.route('/post/<postid>')
 def post(postid): # no default here, error if there is no postid
     pass
 
+
+## Albums
 @app.route('/album/<albumid>')
 def album(albumid): # no default here, error if there is no albumid
     pass
 
+@app.route('/albums')
+def albums():
+    return render_template('albums.html', albums = Album.query.all())
+
+
+## Login/Logout
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method =='POST':

@@ -38,16 +38,29 @@ class Album(db.Model):
 class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
-    album = db.Column(db.Text)
-    owner = db.Column(db.Integer)
+    ownerid = db.Column(db.Integer)
     
-    def __init__(self, name, album, owner):
+    def __init__(self, name, ownerid):
 	self.name = name
-	self.album = album
-	self.owner = owner
+	self.ownerid = ownerid
 
     def __repr__(self):
 	return '<Picture %r>' % self.id
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    text = db.Column(db.Text)
+    ownerid = db.Column(db.Integer)
+    albumid = db.Column(db.Integer)
+    
+    def __init__(self, text, ownerid, albumid):
+	self.text = text
+	self.ownerid = ownerid
+	self.albumid = albumid
+
+    def __repr__(self):
+	return '<Post %r>' % self.id
+
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

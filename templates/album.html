@@ -4,6 +4,6 @@
 {{ album.name }} - {{ album.ownerid }} - visibility {{ album.visibility }} <br/>
 
 {% for picture in pictures %}
-<img src='/images/{{album.id}}/{{ picture.filename }}'/>
+<img src='/images/albums/{{album.id}}/{{ picture.filename }}'/>
 {% endfor %}
 {% endblock %}

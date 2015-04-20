@@ -1,10 +1,20 @@
 {% extends 'default.html' %}
-
 {% block content %}
-<ul>
-{% for album in albums %}
-<li> <span> {{ album.id }} -  {{ album.name }} - {{ album.ownerid }} - {{ album.visibility }} </span> </li>
-{% endfor %}
-</ul>
+<table>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>owner id</th>
+    <th>visibility</th>
+  </tr>
+  {% for album in albums %}
+    <tr>
+      <td><a href="/album/{{ album.id }}">{{ album.id }}</a></td>
+      <td>{{ album.name }}</td>
+      <td><a href="/users/{{album.ownerid}}">{{ album.ownerid }}</td>
+      <td>{{ album.visibility }}</td>
+    </tr>
+  {% endfor %}
+</table>
 
 {% endblock %}

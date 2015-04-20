@@ -4,8 +4,14 @@ db.drop_all()
 db.create_all()
 
 db.session.add(User("George Foreman", "george@gmail.com", "abc123", "george.jpg"))
-db.session.add(User("Mary Juana", "mary@gmail.com", "mary123"))
-db.session.add(User("Peter", "peter@gmail.com", "peter134"))
+db.session.add(User("Mary Juana", "mary@gmail.com", "mary123", "mary.jpg"))
+db.session.add(User("Peter", "peter@gmail.com", "peter134", "arms.jpg"))
+db.session.add(User("Vanna Gentry", "ligula.Nullam.feugiat@Proinnon.ca", "hunter2", "kajsd.jpg"))
+db.session.add(User("Amena Armstrong", "dictum@parturientmontes.net", "friedrice33", "mbnss.jpg"))
+db.session.add(User("Tarik", "gobble@turkeys.org", "akj22", "notmary.jpg"))
+db.session.add(User("Mary's Cousin", "juana@smoke.org", "drugsarebad", "alsonotmary.jpg"))
+
+
 
 db.session.add(Album("album1",1,"public"))
 db.session.add(Album("album2",1,"public"))

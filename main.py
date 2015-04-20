@@ -9,7 +9,10 @@ root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    else:
+        return render_template('index.html')
 
 ## Users
 @app.route('/user/<userid>')

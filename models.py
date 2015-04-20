@@ -22,7 +22,7 @@ class User(db.Model):
     name = db.Column(db.Text)
     email = db.Column(db.Text)
     password = db.Column(db.Text)
-
+    picture = db.Column(db.Text)
 
 
     #friends = db.relationship('User', secondary = friend, primaryjoin=(friend.c.userid == id), secondaryjoin=(friend.c.friendid == id), backref = db.backref('friend', lazy='dynamic'), lazy = 'dynamic')
@@ -31,10 +31,11 @@ class User(db.Model):
 
 
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, picture=""):
 	self.name = name
         self.email = email
         self.password = password
+        self.picture = picture
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -45,7 +46,6 @@ class Album(db.Model):
     ownerid = db.Column(db.Text)
     visibility = db.Column(db.Text)
     #users = db.relationship('users', backref = db.backref('albums', lazy = 'dynamic'))
-
 
     def __init__(self, name, ownerid, visibility):
         self.name=name

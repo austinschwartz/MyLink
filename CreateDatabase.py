@@ -3,7 +3,7 @@ from models import db, User, Picture, Album, Session, Post
 db.drop_all()
 db.create_all()
 
-db.session.add(User("George Foreman", "george@gmail.com", "abc123"))
+db.session.add(User("George Foreman", "george@gmail.com", "abc123", "george.jpg"))
 db.session.add(User("Mary Juana", "mary@gmail.com", "mary123"))
 db.session.add(User("Peter", "peter@gmail.com", "peter134"))
 

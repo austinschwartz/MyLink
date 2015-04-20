@@ -44,3 +44,11 @@ class LoginForm(Form):
     else:
       self.email.errors.append("Invalid e-mail or password")
       return False
+
+class EditProfileForm(Form):
+    password = PasswordField('Password', [validators.Required("Please enter a password.")])
+    submit = SubmitField("Update Account")
+
+def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+

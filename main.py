@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, EditProfileForm
 from models import db, User, Album, Picture, Post
 import os
 
@@ -15,7 +15,7 @@ def index():
         return render_template('index.html')
 
 ## Users
-@app.route('/user/<userid>')
+@app.route('/user/<int:userid>')
 def user(userid): # we'll let -1 mean the current user
     pass
 
@@ -23,7 +23,7 @@ def user(userid): # we'll let -1 mean the current user
 def users():
     return render_template('users.html', users = User.query.all())
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET','POST'])
 def profile():
     if 'email' not in session:
         return redirect(url_for('login'))
@@ -33,10 +33,22 @@ def profile():
     if user is None:
         return redirect(url_for('login'))
     else:
-        return render_template('profile.html')
+        form = EditProfileForm()
+        if request.method == 'POST':
+            if form.validate() == False:
+                return render_template('profile.html', form=form)
+            else:
+                user = User.query.filter_by(email=session['email']).first()
+                user.password = form.password.data
+                db.session.commit()
+            return redirect(url_for('index'))
+        user = User.query.filter_by(email=session['email']).first()
+        #form.password = user.password
+        return render_template('profile.html', form=form)
+    
 
 ## Posts
-@app.route('/post/<postid>')
+@app.route('/post/<int:postid>')
 def post(postid): # no default here, error if there is no postid
     pass
 
@@ -44,8 +56,9 @@ def post(postid): # no default here, error if there is no postid
 def posts():
     return render_template('posts.html', posts = Post.query.all())
 
+
 ## Albums
-@app.route('/album/<albumid>')
+@app.route('/album/<int:albumid>')
 def album(albumid): # no default here, error if there is no albumid
     album = Album.query.filter_by(id = albumid).first()
     pictures = Picture.query.filter_by(albumid = albumid)
@@ -95,6 +108,7 @@ def signup():
             return redirect(url_for('profile'))
     elif request.method == 'GET':
         return render_template('register.html', form = form)
+
 
 ## Files
 @app.route('/<path:path>')

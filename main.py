@@ -1,9 +1,10 @@
-from flask import Flask, render_template, session, redirect, url_for, escape, request
+from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
 from forms import RegisterForm, LoginForm
 from models import db, User, Album, Picture, Post
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
 @app.route('/')
 @app.route('/index')
@@ -43,7 +44,9 @@ def posts():
 ## Albums
 @app.route('/album/<albumid>')
 def album(albumid): # no default here, error if there is no albumid
-    pass
+    album = Album.query.filter_by(id = albumid).first()
+    pictures = Picture.query.filter_by(albumid = albumid)
+    return render_template('album.html', album = album, pictures = pictures)
 
 @app.route('/albums')
 def albums():
@@ -54,6 +57,7 @@ def albums():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+
     if 'email' in session:
         return redirect(url_for('index'))
     if request.method =='POST':
@@ -88,6 +92,11 @@ def signup():
             return redirect(url_for('profile'))
     elif request.method == 'GET':
         return render_template('register.html', form = form)
+
+## Files
+@app.route('/<path:path>')
+def send_static(path):
+    return send_from_directory(root, path)
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)

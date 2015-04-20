@@ -1,5 +1,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -24,10 +25,9 @@ class User(db.Model):
     password = db.Column(db.Text)
     picture = db.Column(db.Text)
 
+    friend = db.relationship("Friend", backref="user")
 
-    #friends = db.relationship('User', secondary = friend, primaryjoin=(friend.c.userid == id), secondaryjoin=(friend.c.friendid == id), backref = db.backref('friend', lazy='dynamic'), lazy = 'dynamic')
-
-    #requests = db.relationship('User', secondary = request, primaryjoin=(request.c.userid == id), secondaryjoin=(request.c.requestingid == id), backref = db.backref('request', lazy='dynamic'), lazy = 'dynamic')
+    request = db.relationship("Request", backref="user")
 
 
 
@@ -39,6 +39,30 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.Integer, ForeignKey('user.id'))
+    friendid = db.Column(db.Integer)
+
+    def __init__(self, userid, friendid):
+	self.userid = userid
+	self.friendid = friendid
+
+    def __repr__(self):
+	return '<Friend %r>' % self.id
+
+class Request(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.Integer, ForeignKey('user.id'))
+    requestingid = db.Column(db.Integer)
+
+    def __init__(self, userid, requestingid):
+	self.userid = userid
+	self.requestingid = requestingid
+
+    def __repr__(self):
+	return '<Request %r>' % self.id
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

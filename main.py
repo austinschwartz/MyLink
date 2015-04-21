@@ -1,5 +1,4 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
-<<<<<<< HEAD
 from flask.ext.storage.local import LocalStorage
 from forms import RegisterForm, LoginForm, EditProfileForm, UsersForm
 from models import db, User, Album, Picture, Post, Friend

@@ -27,10 +27,6 @@ class User(db.Model):
 
     friend = db.relationship("Friend", backref="user")
 
-    request = db.relationship("Request", backref="user")
-
-
-
     def __init__(self, name, email, password, picture=""):
 	self.name = name
         self.email = email
@@ -44,25 +40,15 @@ class Friend(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userid = db.Column(db.Integer, ForeignKey('user.id'))
     friendid = db.Column(db.Integer)
+    state = db.Column(db.Text)
 
-    def __init__(self, userid, friendid):
+    def __init__(self, userid, friendid, state):
 	self.userid = userid
 	self.friendid = friendid
+	self.state = state
 
     def __repr__(self):
 	return '<Friend %r>' % self.id
-
-class Request(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    userid = db.Column(db.Integer, ForeignKey('user.id'))
-    requestingid = db.Column(db.Integer)
-
-    def __init__(self, userid, requestingid):
-	self.userid = userid
-	self.requestingid = requestingid
-
-    def __repr__(self):
-	return '<Request %r>' % self.id
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -119,14 +105,3 @@ class Circle(db.Model):
     def __repr__(self):
 	return '<Circle %r>' % self.id
 
-class Session(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user = db.Column(db.Text)
-    session = db.Column(db.Text)
-
-    def __init__(self, user, session):
-	self.user = user
-	self.owner = owner
-
-    def __repr_(self):
-	return '<Session %r>' %self.id

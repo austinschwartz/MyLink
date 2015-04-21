@@ -1,4 +1,4 @@
-from models import db, User, Picture, Album, Session, Post
+from models import db, User, Picture, Album, Post
 
 db.drop_all()
 db.create_all()

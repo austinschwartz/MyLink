@@ -1,0 +1,28 @@
+{% extends 'default.html' %}
+{% block content %}
+<h1>user</h1>
+<table>
+  <tr>
+    <th>picture</th>
+    <th>id</th>
+    <th>email</th>
+    <th>name</th>
+  </tr>
+    <tr>
+      <td><img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:100px"/></td>
+      <td><a href="/user/{{ user.id }}">{{ user.id }}</a></td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.name }}</td>
+      <td>
+	{% if  session.id != user.id %}
+	<form action="{{ url_for('user', userid = user.id) }}" method=post> 
+	{{ form.submit }}
+	</form>
+	{% endif %}
+      </td>
+    </tr>
+</table>
+
+{% endblock %}
+
+

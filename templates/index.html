@@ -1,6 +1,17 @@
 {% extends "default.html" %}
 {% block content %}
 
-hi! welcome to the index page!
+<p>Activity Feed</p>
+
+<p>Friends:</p>
+{% for friend in friends %}
+  {{ friend.userid }} - {{ friend.friendid }}
+{% endfor %}
+
+<p>Circles you belong to:</p>
+{% for circle in circles %}
+  {{ circle.circleid }} - {{ circle.ownerid }} - {{ circle.ownerid }}
+{% endfor %}
+
 
 {% endblock %}

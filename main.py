@@ -1,9 +1,14 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
+from flask.ext.storage.local import LocalStorage
 from forms import RegisterForm, LoginForm, EditProfileForm
 from models import db, User, Album, Picture, Post
 import os
 
+
 app = Flask(__name__, static_url_path='/static')
+app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
+app.config['UPLOADS_FOLDER'] = os.path.realpath('.') + '/static/'
+app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
 @app.route('/')
@@ -114,6 +119,15 @@ def signup():
 @app.route('/<path:path>')
 def send_static(path):
     return send_from_directory(root, path)
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    """Upload a new file."""
+    if request.method == 'POST':
+        save(request.files['upload'])
+        return redirect(url_for('index'))
+    return render_template('upload.html')
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)

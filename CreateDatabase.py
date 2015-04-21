@@ -1,8 +1,9 @@
-from models import db, User, Picture, Album, Session, Post
+from models import db, User, Picture, Album, Friend, Post
 
 db.drop_all()
 db.create_all()
 
+# Users
 db.session.add(User("George Foreman", "george@gmail.com", "abc123", "george.jpg"))
 db.session.add(User("Mary Juana", "mary@gmail.com", "mary123", "mary.jpg"))
 db.session.add(User("Peter", "peter@gmail.com", "peter134", "arms.jpg"))
@@ -11,13 +12,18 @@ db.session.add(User("Amena Armstrong", "dictum@parturientmontes.net", "friedrice
 db.session.add(User("Tarik", "gobble@turkeys.org", "akj22", "notmary.jpg"))
 db.session.add(User("Mary's Cousin", "juana@smoke.org", "drugsarebad", "alsonotmary.jpg"))
 
+db.session.add(Friend(1, 2))
+db.session.add(Friend(2, 1))
+db.session.add(Friend(1, 3))
+db.session.add(Friend(3, 1))
+db.session.add(Friend(1, 4))
+db.session.add(Friend(4, 1))
 
-
-db.session.add(Album("album1",1,"public"))
-db.session.add(Album("album2",1,"public"))
-db.session.add(Album("album3",1,"private"))
-db.session.add(Album("album1",2,"public"))
-db.session.add(Album("Pictures of my dumb cat",3,"public"))
+db.session.add(Album("album1", 1, "public"))
+db.session.add(Album("album2", 1, "public"))
+db.session.add(Album("album3", 1, "private"))
+db.session.add(Album("album1", 2, "public"))
+db.session.add(Album("Pictures of my dumb cat", 3, "public"))
 
 db.session.add(Picture("image-89.jpg", 1 ))
 db.session.add(Picture("image-90.jpg", 1 ))

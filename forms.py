@@ -45,13 +45,21 @@ class LoginForm(Form):
       self.email.errors.append("Invalid e-mail or password")
       return False
 
-class EditProfileForm(Form):
-    password = PasswordField('Password', [validators.Required("Please enter a password.")])
-    submit = SubmitField("Update Account")
 
-class UsersForm(Form):
-    submit = SubmitField("Add Friend")
-    
-def __init__(self, *args, **kwargs):
+
+class EditProfileForm(Form):
+  password = PasswordField('Password', [validators.Required("Please enter a password.")])
+  submit = SubmitField("Update Account")
+ 
+  def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
+ 
+
+
+class RequestFriendForm(Form):
+  submit = SubmitField("Add Friend")
+  
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+    
 

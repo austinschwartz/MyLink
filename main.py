@@ -1,9 +1,8 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
 from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, UsersForm
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm
 from models import db, User, Album, Picture, Post, Friend
 import os
-
 
 app = Flask(__name__, static_url_path='/static')
 app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
@@ -17,18 +16,18 @@ def index():
     if 'email' not in session:
         return redirect(url_for('login'))
     else:
-        return render_template('index.html')
+        friends = Friend.query.filter_by(userid = session['id'])
+        return render_template('index.html', friends=friends)
 
 ## Users
 @app.route('/user/<userid>')
-def user(userid): # we'll let -1 mean the current user
-    if 'id' not in session:
+def user(userid):
+    if 'email' not in session:
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
 
-    form = UsersForm()
-    currentuser = session['id']
-    friends = Friend.query.filter_by(userid = currentuser, friendid = userid)
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form)
+    form = RequestFriendForm()
+    friends = Friend.query.filter_by(userid = session['id'], friendid = userid)
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, friends=friends)
 
 @app.route('/users')
 def users():
@@ -103,6 +102,7 @@ def logout():
         return redirect(url_for('login'))
 
     session.pop('email', None)
+    session.pop('id', None)
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])

@@ -4,9 +4,22 @@
 <p>Activity Feed</p>
 
 <p>Friends:</p>
-{% for friend in friends %}
-  {{ friend.userid }} - {{ friend.friendid }}
-{% endfor %}
+<table>
+  <tr>
+    <th>id</th>
+    <th>uid</th>
+    <th>fid</th>
+    <th>state</th>
+  </tr>
+  {% for friend in friends %}
+    <tr>
+      <td>{{ friend.id }}</td>
+      <td>{{ friend.userid }}</td>
+      <td>{{ friend.friendid }}</td>
+      <td>{{ friend.state }}</td>
+    </tr>
+  {% endfor %}
+</table>
 
 <p>Circles you belong to:</p>
 {% for circle in circles %}

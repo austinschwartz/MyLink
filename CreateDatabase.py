@@ -12,12 +12,14 @@ db.session.add(User("Amena Armstrong", "dictum@parturientmontes.net", "friedrice
 db.session.add(User("Tarik", "gobble@turkeys.org", "akj22", "notmary.jpg"))
 db.session.add(User("Mary's Cousin", "juana@smoke.org", "drugsarebad", "alsonotmary.jpg"))
 
-db.session.add(Friend(1, 2))
-db.session.add(Friend(2, 1))
-db.session.add(Friend(1, 3))
-db.session.add(Friend(3, 1))
-db.session.add(Friend(1, 4))
-db.session.add(Friend(4, 1))
+db.session.add(Friend(1, 2, "a"))
+db.session.add(Friend(2, 1, "a"))
+
+db.session.add(Friend(1, 3, "r")) # 1 is requesting 3 as friend
+db.session.add(Friend(3, 1, "p")) # 3 has pending request from 1
+
+db.session.add(Friend(1, 4, "d")) 
+db.session.add(Friend(4, 1, "d"))
 
 db.session.add(Album("album1", 1, "public"))
 db.session.add(Album("album2", 1, "public"))

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
+<<<<<<< HEAD
 from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm
-from models import db, User, Album, Picture, Post
+from forms import RegisterForm, LoginForm, EditProfileForm, UsersForm
+from models import db, User, Album, Picture, Post, Friend
 import os
 
 
@@ -20,9 +21,15 @@ def index():
         return render_template('index.html')
 
 ## Users
-@app.route('/user/<int:userid>')
+@app.route('/user/<userid>')
 def user(userid): # we'll let -1 mean the current user
-    pass
+    if 'id' not in session:
+       return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
+
+    form = UsersForm()
+    currentuser = session['id']
+    friends = Friend.query.filter_by(userid = currentuser, friendid = userid)
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form)
 
 @app.route('/users')
 def users():
@@ -86,6 +93,7 @@ def login():
             return render_template('login.html', form=form)
         else:
             session['email'] = form.email.data
+	    session['id'] =  User.query.filter_by(email = form.email.data).first().id
             return redirect(url_for('profile'))
     elif request.method == 'GET':
         return render_template('login.html', form=form)

@@ -26,25 +26,15 @@ class Friend(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userid = db.Column(db.Integer)
     friendid = db.Column(db.Integer)
+    state = db.Column(db.Text)
 
-    def __init__(self, userid, friendid):
+    def __init__(self, userid, friendid, state):
 	self.userid = userid
 	self.friendid = friendid
+	self.state = state
 
     def __repr__(self):
 	return '<Friend %r>' % self.id
-
-class Request(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    userid = db.Column(db.Integer, ForeignKey('user.id'))
-    requestingid = db.Column(db.Integer)
-
-    def __init__(self, userid, requestingid):
-	self.userid = userid
-	self.requestingid = requestingid
-
-    def __repr__(self):
-	return '<Request %r>' % self.id
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

@@ -5,26 +5,46 @@
     {% else %}
     <title>MyLink</title>
     {% endif %}
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+      .container {
+        max-width: 800px;
+        margin-top:15px;
+      }
+    </style>
   </head>
   <body>
-    <div>MyLink:
-      <a href='/index'>Home</a>
-      <a href="/users">Users</a>
-      <a href="/albums">Albums</a>
-      <a href="/posts">Posts</a>
-      {% if 'email' in session %}
-      <a href='/profile'>Profile</a>
-      <a href='/logout'>Logout</a>
-      {% else %}
-      <a href='/login'>Login</a>
-      <a href='/register'>Register</a>
-      {% endif %}
-    </div>
-    <hr>
-    {% block content %}{% endblock %}
-    <br/><br/><br/>
-    session:<br/>
-    {{ session|tojson }} <br/></br>
-    users in db should be "george@gmail.com : abc123", "mary@gmail.com : mary123"</br>
-  </body>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <a class="navbar-brand" href="#">MyLink</a>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav nav-pills pull-right">
+              <li class="active"><a href='/index'>Home</a></li>
+              <li><a href="/users">Users</a></li>
+              <li><a href="/albums">Albums</a></li>
+              <li><a href="/posts">Posts</a></li>
+              {% if 'email' in session %}
+              <li><a href='/profile'>Profile</a></li>
+              <li><a href='/logout'>Logout</a></li>
+              {% else %}
+              <li><a href='/login'>Login</a></li>
+              <li><a href='/register'>Register</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+      </div>
+      
+      <div class="row marketting">
+          {% block content %}
+          {% endblock %}
+      </div>
+      <footer class="footer">
+        <p>session:</p>
+        <p>{{ session|tojson }}</p>
+          users in db should be "george@gmail.com : abc123", "mary@gmail.com : mary123"</br>
+        </div>
+      </footer>
+    </body>
 </html>

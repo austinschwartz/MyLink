@@ -1,17 +1,17 @@
 {% extends 'default.html' %}
 
 {% block content %}
-<table>
+<table class="table">
   <tr>
-    <th>picture</th>
     <th>id</th>
+    <th>picture</th>
     <th>email</th>
     <th>name</th>
   </tr>
   {% for user in users %}
     <tr>
-      <td><img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:100px"/></td>
       <td><a href="/user/{{ user.id }}">{{ user.id }}</a></td>
+      <td><img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:100px"/></td>
       <td>{{ user.email }}</td>
       <td>{{ user.name }}</td>
     </tr>

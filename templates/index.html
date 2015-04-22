@@ -5,16 +5,10 @@
 
 <p>Friends:</p>
 <table>
-  <tr>
-    <th>id</th>
-    <th>uid</th>
-    <th>fid</th>
-    <th>state</th>
-  </tr>
   {% for friend in friends %}
     <tr>
+      <td><img src="/images/users/{{ friend.id }}/{{ friend.picture }}"/ style="width: 100px"></td>
       <td>{{ friend.id }}</td>
-      <td>{{ friend.userid }}</td>
       <td>{{ friend.friendid }}</td>
       <td>{{ friend.state }}</td>
     </tr>

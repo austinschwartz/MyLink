@@ -17,7 +17,12 @@ def index():
         return redirect(url_for('login'))
     else:
         friends = Friend.query.filter_by(userid = session['id'])
-        return render_template('index.html', friends=friends)
+        friendUsers = []
+        for friend in friends:
+            friendUser = User.query.filter_by(id = friend.id).first()
+            if friend.state == 'a':
+                friendUsers.append(friendUser)
+        return render_template('index.html', friends=friendUsers)
 
 ## Users
 @app.route('/user/<userid>')

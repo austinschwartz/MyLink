@@ -36,7 +36,7 @@ def user(userid):
 
 @app.route('/users')
 def users():
-    return render_template('users.html', users = User.query.all())
+    return render_template('users.html', users = User.query.all(), title="users")
 
 @app.route('/profile', methods=['GET','POST'])
 def profile():
@@ -51,7 +51,7 @@ def profile():
         form = EditProfileForm()
         if request.method == 'POST':
             if form.validate() == False:
-                return render_template('profile.html', form=form)
+                return render_template('profile.html', form=form, title='profile')
             else:
                 user = User.query.filter_by(email=session['email']).first()
                 user.password = form.password.data
@@ -59,7 +59,7 @@ def profile():
             return redirect(url_for('index'))
         user = User.query.filter_by(email=session['email']).first()
         #form.password = user.password
-        return render_template('profile.html', form=form)
+        return render_template('profile.html', form=form, title='profile')
     
 
 ## Posts
@@ -69,7 +69,7 @@ def post(postid): # no default here, error if there is no postid
 
 @app.route('/posts')
 def posts():
-    return render_template('posts.html', posts = Post.query.all())
+    return render_template('posts.html', posts = Post.query.all(), title='posts')
 
 
 ## Albums
@@ -81,7 +81,7 @@ def album(albumid): # no default here, error if there is no albumid
 
 @app.route('/albums')
 def albums():
-    return render_template('albums.html', albums = Album.query.all())
+    return render_template('albums.html', albums = Album.query.all(), title='albums')
 
 
 ## Login/Logout
@@ -93,13 +93,13 @@ def login():
         return redirect(url_for('index'))
     if request.method =='POST':
         if form.validate() == False:
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form, title='login')
         else:
             session['email'] = form.email.data
 	    session['id'] =  User.query.filter_by(email = form.email.data).first().id
             return redirect(url_for('profile'))
     elif request.method == 'GET':
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, title='login')
 
 @app.route('/logout')
 def logout():
@@ -124,7 +124,7 @@ def signup():
             session['email'] = user.email
             return redirect(url_for('profile'))
     elif request.method == 'GET':
-        return render_template('register.html', form = form)
+        return render_template('register.html', form = form, title='register')
 
 
 ## Files

@@ -3,7 +3,7 @@
     {% if title %}
       <title>{{ title }} - MyLink</title>
     {% else %}
-    <title>MyLink</title>
+      <title>MyLink</title>
     {% endif %}
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
     <link href="static/css/style.css" rel="stylesheet" media="screen"/>
@@ -13,16 +13,67 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li class="active"><a href='/index'>Home</a></li>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/albums">Albums</a></li>
-            <li><a href="/posts">Posts</a></li>
-            {% if 'email' in session %}
-            <li><a href='/profile'>Profile</a></li>
-            <li><a href='/logout'>Logout</a></li>
+
+            {% if not title or title=="index" %}
+            <li class='active'>
             {% else %}
-            <li><a href='/login'>Login</a></li>
-            <li><a href='/register'>Register</a></li>
+            <li>
+            {% endif %}
+            <a href='/index'>Home</a></li>
+
+            {% if title == "users" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/users'>Users</a></li>
+
+            {% if title == "albums" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/albums'>Albums</a></li>
+
+            {% if title == "posts" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/posts'>Posts</a></li>
+
+            {% if 'email' in session %}
+
+            {% if title == "profile" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/profile'>Profile</a></li>
+
+            {% if title == "logout" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/logout'>Logout</a></li>
+
+            {% else %}
+
+            {% if title == "login" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/login'>Login</a></li>
+
+            {% if title == "register" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/register'>Register</a></li>
+
             {% endif %}
           </ul>
         </nav>

@@ -1,13 +1,13 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
-from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm
+#from flask.ext.storage.local import LocalStorage
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm
 from models import db, User, Album, Picture, Post, Friend
 import os
 
 app = Flask(__name__, static_url_path='/static')
-app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
-app.config['UPLOADS_FOLDER'] = os.path.realpath('.') + '/static/'
-app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
+#app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
+#app.config['UPLOADS_FOLDER'] = os.path.realpath('.') + '/static/'
+#app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
 @app.route('/')
@@ -31,8 +31,16 @@ def user(userid):
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
 
     form = RequestFriendForm()
-    friends = Friend.query.filter_by(userid = session['id'], friendid = userid)
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, friends=friends)
+    #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
+
+    friends = Friend.query.filter_by(userid = session['id'])
+    friendUsers = []
+    for friend in friends:
+        friendUser = User.query.filter_by(id = friend.id).first()
+        if friend.state == 'a':
+            friendUsers.append(friendUser)
+
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, friends=friendUsers)
 
 @app.route('/users')
 def users():
@@ -59,6 +67,7 @@ def profile():
             return redirect(url_for('index'))
         user = User.query.filter_by(email=session['email']).first()
         #form.password = user.password
+
         return render_template('profile.html', form=form, title='profile')
     
 
@@ -70,6 +79,31 @@ def post(postid): # no default here, error if there is no postid
 @app.route('/posts')
 def posts():
     return render_template('posts.html', posts = Post.query.all(), title='posts')
+
+##Requests
+@app.route('/requests')
+def requests():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email = session['email']).first()
+
+    if user is None:
+        return redirect(url_for('login'))
+    
+    form = AcceptDenyForm()
+    #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
+
+    friends = Friend.query.filter_by(friendid = session['id'])
+    friendUsers = []
+    for friend in friends:
+        friendUser = User.query.filter_by(id = friend.id).first()
+        if friend.state == 'p':
+	    print friend.userid
+	    print friend.friendid
+            friendUsers.append(friendUser)
+
+    return render_template('request.html', form = form, requests = Friend.query.all())
 
 
 ## Albums

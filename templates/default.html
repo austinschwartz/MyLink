@@ -51,6 +51,13 @@
             {% endif %}
             <a href='/profile'>Profile</a></li>
 
+	    {% if title == "requests" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/requests'>Requests</a></li>	    
+
             {% if title == "logout" %}
             <li class='active'>
             {% else %}

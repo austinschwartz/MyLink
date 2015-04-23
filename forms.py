@@ -55,9 +55,16 @@ class EditProfileForm(Form):
     Form.__init__(self, *args, **kwargs)
  
 
-
 class RequestFriendForm(Form):
   submit = SubmitField("Add Friend")
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+
+
+class AcceptDenyForm(Form):
+  accept = SubmitField("Accept")
+  deny = SubmitField("Deny")
   
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)

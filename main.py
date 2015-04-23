@@ -103,7 +103,7 @@ def requests():
 	    print friend.friendid
             friendUsers.append(friendUser)
 
-    return render_template('request.html', form = form, requests = Friend.query.all())
+    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all())
 
 
 ## Albums

@@ -15,10 +15,28 @@
       <td><a href="/user/{{ request.userid }}">{{ request.userid }}</td>
       <td><form action="{{ url_for('requests') }}" method = post>
 	{{ form.accept }}
-	{{ form.deny }}
+	{{ form.deny }} </form>
       </td>
     </tr>
     {% endif %}
   {% endfor %}
 </table>
+
+<h3>Status</h3>
+
+<table class="table">
+  <tr>
+    <th>friendid</th>
+    <th>userid</th>
+    <th>state</th>
+  </tr>
+  {%for state in states %}
+    <tr>
+      <td><a href="/user/{{ state.friendid }}">{{ state.friendid }}</a></td>
+      <td><a href="/user/{{ state.userid }}">{{ state.userid }}</td>
+      <td>{{ state.state }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
 {% endblock %}

@@ -15,7 +15,9 @@
       <td><a href="/user/{{ request.userid }}">{{ request.userid }}</td>
       <td><form action="{{ url_for('requests') }}" method = post>
 	{{ form.accept }}
-	{{ form.deny }} </form>
+	{{ form.deny }}
+	{{ form.hidden(value= request.friendid) }}
+</form>
       </td>
     </tr>
     {% endif %}

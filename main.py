@@ -81,7 +81,7 @@ def posts():
     return render_template('posts.html', posts = Post.query.all(), title='posts')
 
 ##Requests
-@app.route('/requests')
+@app.route('/requests',  methods=['GET','POST'])
 def requests():
     if 'email' not in session:
         return redirect(url_for('login'))
@@ -91,18 +91,22 @@ def requests():
     if user is None:
         return redirect(url_for('login'))
     
-    form = AcceptDenyForm()
-    #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
-
+    form = AcceptDenyForm(request.values)
+    
     friends = Friend.query.filter_by(friendid = session['id'])
     friendUsers = []
     for friend in friends:
         friendUser = User.query.filter_by(id = friend.id).first()
         if friend.state == 'p':
-	    print friend.userid
-	    print friend.friendid
             friendUsers.append(friendUser)
 
+    if request.method == 'POST':
+	if 'accept' in request.form:
+	    print request.form['accept']
+	elif 'deny' in request.form:
+	    print 'denied'
+	    
+    print request.values
     return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all())
 
 

@@ -15,6 +15,9 @@ db.session.add(User("Mary's Cousin", "juana@smoke.org", "drugsarebad", "alsonotm
 db.session.add(Friend(1, 2, "a"))
 db.session.add(Friend(2, 1, "a"))
 
+db.session.add(Friend(5, 1, "p"))
+db.session.add(Friend(1, 5, "r"))
+
 db.session.add(Friend(1, 3, "r")) # 1 is requesting 3 as friend
 db.session.add(Friend(3, 1, "p")) # 3 has pending request from 1
 

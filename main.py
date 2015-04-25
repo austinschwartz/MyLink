@@ -100,14 +100,34 @@ def requests():
         if friend.state == 'p':
             friendUsers.append(friendUser)
 
+    sessionid = session['id']
     if request.method == 'POST':
 	if 'accept' in request.form:
-	    print request.form['accept']
+	    friend_id = request.values['hidden']
+	    acceptdeny(sessionid, friend_id, "p", "r", "a")
 	elif 'deny' in request.form:
-	    print 'denied'
+	    friend_id = request.values['hidden']
+	    acceptdeny(sessionid, friend_id, "p", "r", "d")
 	    
-    print request.values
+	    
     return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all())
+
+#accept is (id, id, p, r, a)
+def acceptdeny(sessionid, friend_id, state1, state2, state3):
+    friends = Friend.query.filter_by(friendid = sessionid)
+
+    for friend in friends:
+	if str(friend.state) == str(state1) and str(friend.friendid) == str(sessionid) and str(friend.userid) == str(friend_id):
+	    friend.state = state3
+	    db.session.commit()
+      
+    friends = Friend.query.filter_by(friendid = friend_id)
+
+    for friend in friends:
+	if str(friend.state == state2) and str(friend.userid) == str(sessionid) and str(friend.friendid) == str(friend_id):
+	    friend.state = state3
+	    db.session.commit()
+
 
 
 ## Albums

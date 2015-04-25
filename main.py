@@ -25,7 +25,7 @@ def index():
         return render_template('index.html', friends=friendUsers)
 
 ## Users
-@app.route('/user/<userid>')
+@app.route('/user/<userid>', methods={'GET', 'POST'})
 def user(userid):
     if 'email' not in session:
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
@@ -33,14 +33,26 @@ def user(userid):
     form = RequestFriendForm()
     #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
 
-    friends = Friend.query.filter_by(userid = session['id'])
+    friends = Friend.query.filter_by(userid = session['id'], friendid = userid)
     friendUsers = []
+    isFriend = False
     for friend in friends:
-        friendUser = User.query.filter_by(id = friend.id).first()
-        if friend.state == 'a':
-            friendUsers.append(friendUser)
+	print "Is Friend"
+	isFriend = True
 
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, friends=friendUsers)
+    if request.method == 'POST':
+	##print request.form
+	if 'submit' in request.form:
+	    print "adding friend"
+	    fr = Friend(session['id'], userid, 'r')
+	    db.session.add(fr)
+	    fr = Friend(userid, session['id'], 'p')
+	    db.session.add(fr)
+            db.session.commit()
+	    isFriend = True
+	    
+
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend)
 
 @app.route('/users')
 def users():
@@ -108,14 +120,16 @@ def requests():
 	elif 'deny' in request.form:
 	    friend_id = request.values['hidden']
 	    acceptdeny(sessionid, friend_id, "p", "r", "d")
-	    
+
     return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = session['id'], title='requests')
 
 #accept is (id, id, p, r, a)
 def acceptdeny(sessionid, friend_id, state1, state2, state3):
+    print "accept deny", sessionid, friend_id, state1, state2, state3
     friends = Friend.query.filter_by(friendid = sessionid)
 
     for friend in friends:
+        print friend
 	if str(friend.state) == str(state1) and str(friend.friendid) == str(sessionid) and str(friend.userid) == str(friend_id):
 	    friend.state = state3
 	    db.session.commit()
@@ -123,7 +137,7 @@ def acceptdeny(sessionid, friend_id, state1, state2, state3):
     friends = Friend.query.filter_by(friendid = friend_id)
 
     for friend in friends:
-	if str(friend.state == state2) and str(friend.userid) == str(sessionid) and str(friend.friendid) == str(friend_id):
+	if str(friend.state) == str(state2) and str(friend.userid) == str(sessionid) and str(friend.friendid) == str(friend_id):
 	    friend.state = state3
 	    db.session.commit()
 

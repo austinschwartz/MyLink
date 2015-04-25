@@ -6,13 +6,12 @@
   <span>{{ user.email }}</span>
 
   {% if form %}
-  <td>
-    <form action="{{ url_for('user', userid = user.id) }}" method=post> 
-      {{ form.submit }}
-    </form>
-  </td>
+    {% if isFriend != True %}
+        <td><form action="{{ url_for('user', userid = user.id) }}" method=post> 
+        {{ form.submit }}
+      </form></td>
+    {% endif %}
   {% endif %}
-
 {% endblock %}
 
 

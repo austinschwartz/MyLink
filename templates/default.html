@@ -42,44 +42,45 @@
             {% endif %}
             <a href='/posts'>Posts</a></li>
 
-            {% if 'email' in session %}
-
-            {% if title == "profile" %}
-            <li class='active'>
-            {% else %}
-            <li>
-            {% endif %}
-            <a href='/profile'>Profile</a></li>
-
-	    {% if title == "requests" %}
+            {% if title == "requests" %}
             <li class='active'>
             {% else %}
             <li>
             {% endif %}
             <a href='/requests'>Requests</a></li>	    
 
-            {% if title == "logout" %}
-            <li class='active'>
-            {% else %}
-            <li>
-            {% endif %}
-            <a href='/logout'>Logout</a></li>
 
-            {% else %}
+            {% if 'email' in session %}
 
-            {% if title == "login" %}
-            <li class='active'>
-            {% else %}
-            <li>
-            {% endif %}
-            <a href='/login'>Login</a></li>
+              {% if title == "profile" %}
+              <li class='active'>
+              {% else %}
+              <li>
+              {% endif %}
+              <a href='/profile'>Profile</a></li>
 
-            {% if title == "register" %}
-            <li class='active'>
-            {% else %}
-            <li>
-            {% endif %}
-            <a href='/register'>Register</a></li>
+              {% if title == "logout" %}
+              <li class='active'>
+              {% else %}
+              <li>
+              {% endif %}
+              <a href='/logout'>Logout</a></li>
+
+              {% else %}
+
+              {% if title == "login" %}
+              <li class='active'>
+              {% else %}
+              <li>
+              {% endif %}
+              <a href='/login'>Login</a></li>
+
+              {% if title == "register" %}
+              <li class='active'>
+              {% else %}
+              <li>
+              {% endif %}
+              <a href='/register'>Register</a></li>
 
             {% endif %}
           </ul>

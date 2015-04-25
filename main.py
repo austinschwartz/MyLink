@@ -109,8 +109,7 @@ def requests():
 	    friend_id = request.values['hidden']
 	    acceptdeny(sessionid, friend_id, "p", "r", "d")
 	    
-	    
-    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = session['id'])
+    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = session['id'], title='requests')
 
 #accept is (id, id, p, r, a)
 def acceptdeny(sessionid, friend_id, state1, state2, state3):
@@ -180,6 +179,7 @@ def signup():
             db.session.add(user)
             db.session.commit()
             session['email'] = user.email
+	    session['id'] =  User.query.filter_by(email = session['email']).first().id
             return redirect(url_for('profile'))
     elif request.method == 'GET':
         return render_template('register.html', form = form, title='register')

@@ -110,7 +110,7 @@ def requests():
 	    acceptdeny(sessionid, friend_id, "p", "r", "d")
 	    
 	    
-    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all())
+    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = session['id'])
 
 #accept is (id, id, p, r, a)
 def acceptdeny(sessionid, friend_id, state1, state2, state3):

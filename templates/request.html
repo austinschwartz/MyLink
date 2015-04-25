@@ -9,7 +9,7 @@
     <th>accept?</th>
   </tr>
   {%for request in requests %}
-    {% if request.state == 'r' %}
+    {% if request.friendid == userid and request.state == 'r' %}
     <tr>
       <td><a href="/user/{{ request.friendid }}">{{ request.friendid }}</a></td>
       <td><a href="/user/{{ request.userid }}">{{ request.userid }}</td>
@@ -24,7 +24,27 @@
   {% endfor %}
 </table>
 
-<h3>Status</h3>
+<h2>Pending</h2>
+
+<table class="table">
+  <tr>
+    <th>friendid</th>
+    <th>userid</th>
+    <th>state</th>
+  </tr>
+  {%for request in requests %}
+    {% if request.friendid == userid and request.state =='p' %}
+    <tr>
+      <td><a href="/user/{{ request.friendid }}">{{ request.friendid }}</a></td>
+      <td><a href="/user/{{ request.userid }}">{{ request.userid }}</td>
+      <td> {{ request.state }} </td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+</table>
+
+
+<h3>Debug</h3>
 
 <table class="table">
   <tr>

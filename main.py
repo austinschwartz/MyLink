@@ -25,7 +25,7 @@ def index():
         return render_template('index.html', friends=friendUsers)
 
 ## Users
-@app.route('/user/<userid>')
+@app.route('/user/<userid>', methods={'GET', 'POST'})
 def user(userid):
     if 'email' not in session:
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
@@ -37,11 +37,20 @@ def user(userid):
     friendUsers = []
     isFriend = False
     for friend in friends:
+	print "Is Friend"
 	isFriend = True
-    #if friend is :
-    #    print "friends------"
-	#isFriend = True
 
+    if request.method == 'POST':
+	##print request.form
+	if 'submit' in request.form:
+	    print "adding friend"
+	    fr = Friend(session['id'], userid, 'r')
+	    db.session.add(fr)
+	    fr = Friend(userid, session['id'], 'p')
+	    db.session.add(fr)
+            db.session.commit()
+	    isFriend = True
+	    
 
     return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend)
 

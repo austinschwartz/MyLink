@@ -4,11 +4,11 @@
   <h1>#{{ user.id }} {{ user.name }}</h1>
   <img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:200px"/>
   <span>{{ user.email }}</span>
-
-    <td><form action="{{ url_for('user', userid = user.id) }}" method=post> 
+    {% if isFriend != True %}
+        <td><form action="{{ url_for('user', userid = user.id) }}" method=post> 
         {{ form.submit }}
       </form></td>
-
+    {% endif %}
 {% endblock %}
 
 

@@ -33,14 +33,17 @@ def user(userid):
     form = RequestFriendForm()
     #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
 
-    friends = Friend.query.filter_by(userid = session['id'])
+    friends = Friend.query.filter_by(userid = session['id'], friendid = userid)
     friendUsers = []
+    isFriend = False
     for friend in friends:
-        friendUser = User.query.filter_by(id = friend.id).first()
-        if friend.state == 'a':
-            friendUsers.append(friendUser)
+	isFriend = True
+    #if friend is :
+    #    print "friends------"
+	#isFriend = True
 
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, friends=friendUsers)
+
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend)
 
 @app.route('/users')
 def users():

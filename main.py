@@ -20,7 +20,6 @@ def index():
         friendUsers = []
         for friend in friends:
             friendUser = User.query.filter_by(id = friend.friendid).first()
-            print friendUser
             if friend.state == 'a':
                 friendUsers.append(friendUser)
         return render_template('index.html', friends=friendUsers)

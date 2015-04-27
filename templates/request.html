@@ -16,7 +16,7 @@
       <td><form action="{{ url_for('requests') }}" method = post>
 	{{ form.accept }}
 	{{ form.deny }}
-	{{ form.hidden(value= request.friendid) }}
+	{{ form.hidden(value= request.userid) }}
 </form>
       </td>
     </tr>

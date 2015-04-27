@@ -110,18 +110,28 @@ def requests():
     for friend in friends:
         friendUser = User.query.filter_by(id = friend.id).first()
         if friend.state == 'p':
-            friendUsers.append(friendUser)
+            friendUsers.append(friendUser)    
 
     sessionid = session['id']
     if request.method == 'POST':
+	print "POST"
+	friendid = request.values['hidden']
+	print friendid
+	friend_from = Friend.query.filter_by(friendid = friendid, userid = sessionid).first()
+	friend_to = Friend.query.filter_by(friendid = sessionid, userid = friendid).first() 
 	if 'accept' in request.form:
-	    friend_id = request.values['hidden']
-	    acceptdeny(sessionid, friend_id, "p", "r", "a")
+	    print "Accept"
+	#    for friend in friend_from:
+	#	print friend.state
+	    friend_from.state = 'a'
+	    friend_to.state = 'a'
 	elif 'deny' in request.form:
-	    friend_id = request.values['hidden']
-	    acceptdeny(sessionid, friend_id, "p", "r", "d")
+	    friend_from.state = 'd'
+	    friend_to.state = 'd'
 
-    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = session['id'], title='requests')
+	db.session.commit()
+
+    return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = sessionid, title='requests')
 
 #accept is (id, id, p, r, a)
 def acceptdeny(sessionid, friend_id, state1, state2, state3):

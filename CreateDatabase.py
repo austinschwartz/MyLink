@@ -1,4 +1,4 @@
-from models import db, User, Picture, Album, Friend, Post
+from models import db, User, Picture, Album, Friend, Post, Circle
 
 db.drop_all()
 db.create_all()
@@ -15,14 +15,19 @@ db.session.add(User("Mary's Cousin", "juana@smoke.org", "drugsarebad", "alsonotm
 db.session.add(Friend(1, 2, "a"))
 db.session.add(Friend(2, 1, "a"))
 
-db.session.add(Friend(5, 1, "r"))
-db.session.add(Friend(1, 5, "p"))
+db.session.add(Friend(5, 1, "a"))
+db.session.add(Friend(1, 5, "a"))
 
-db.session.add(Friend(1, 3, "r")) # 1 is requesting 3 as friend
-db.session.add(Friend(3, 1, "p")) # 3 has pending request from 1
+db.session.add(Friend(1, 3, "a")) # 1 is requesting 3 as friend
+db.session.add(Friend(3, 1, "a")) # 3 has pending request from 1
 
-db.session.add(Friend(1, 4, "d")) 
-db.session.add(Friend(4, 1, "d"))
+db.session.add(Friend(1, 4, "a")) 
+db.session.add(Friend(4, 1, "a"))
+
+db.session.add(Circle("friends", 1, 1, 2))
+db.session.add(Circle("friends", 1, 1, 3))
+db.session.add(Circle("friends", 1, 1, 4))
+db.session.add(Circle("friends", 1, 1, 5))
 
 db.session.add(Album("album1", 1, "public"))
 db.session.add(Album("album2", 1, "public"))

@@ -78,11 +78,13 @@ class Post(db.Model):
 
 class Circle(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    circlename = db.Column(db.Text)
     circleid = db.Column(db.Integer)
     ownerid = db.Column(db.Integer)
     userid = db.Column(db.Integer)
 
-    def __init__(self, circleid, ownerid, userid):
+    def __init__(self, circlename, circleid, ownerid, userid):
+	self.circlename = circlename
 	self.userid = userid
 	self.ownerid = ownerid
 	self.circleid = circleid

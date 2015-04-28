@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import validators
-from wtforms.fields import TextField, TextAreaField, SubmitField, PasswordField, SelectField, HiddenField
+from wtforms.fields import TextField, TextAreaField, SubmitField, PasswordField, SelectField, HiddenField, SelectMultipleField
 from wtforms.validators import ValidationError
 from models import db, User
 
@@ -57,10 +57,10 @@ class EditProfileForm(Form):
 
 class RequestFriendForm(Form):
   submit = SubmitField("Add Friend")
+  remove = SubmitField("Remove Friend")
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
-
 
 class AcceptDenyForm(Form):
   accept = SubmitField('Accept')
@@ -70,4 +70,10 @@ class AcceptDenyForm(Form):
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
     
+class CreateCircleForm(Form):
+  name = TextField("Circle Name")
+  multiple = SelectMultipleField(u'Friends', choices=[])
+  submit = SubmitField('Create Circle')
 
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)

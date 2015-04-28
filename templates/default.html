@@ -34,7 +34,7 @@
             <li>
             {% endif %}
             <a href='/albums'>Albums</a></li>
-
+ 
             {% if title == "posts" %}
             <li class='active'>
             {% else %}
@@ -47,8 +47,14 @@
             {% else %}
             <li>
             {% endif %}
-            <a href='/requests'>Requests</a></li>	    
-
+            <a href='/requests'>Requests</a></li>
+	
+	    {% if title == "circles" %}
+            <li class='active'>
+            {% else %}
+            <li>
+            {% endif %}
+            <a href='/circles'>Circles</a></li>		    
 
             {% if 'email' in session %}
 

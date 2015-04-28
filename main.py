@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
 #from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm
-from models import db, User, Album, Picture, Post, Friend
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm
+from models import db, User, Album, Picture, Post, Friend, Circle
 import os
 
 app = Flask(__name__, static_url_path='/static')
@@ -33,26 +33,36 @@ def user(userid):
     form = RequestFriendForm()
     #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
 
-    friends = Friend.query.filter_by(userid = session['id'], friendid = userid)
+    friends = Friend.query.filter_by(userid = session['id'], friendid = userid).first();
     friendUsers = []
     isFriend = False
-    for friend in friends:
-	print "Is Friend"
-	isFriend = True
+    acceptedFriends = False
+    if friends is not None:
+	if friends.state != 'p' or friends.state != 'r':
+	    isFriend = True
+	    if friends.state == 'a':
+		acceptedFriends = True
 
     if request.method == 'POST':
-	##print request.form
+	friend_from = Friend.query.filter_by(friendid = userid, userid = session['id']).first()
+	friend_to = Friend.query.filter_by(friendid = session['id'], userid = userid).first() 
 	if 'submit' in request.form:
-	    print "adding friend"
-	    fr = Friend(session['id'], userid, 'r')
-	    db.session.add(fr)
-	    fr = Friend(userid, session['id'], 'p')
-	    db.session.add(fr)
-            db.session.commit()
-	    isFriend = True
-	    
+	    if friend_from is None and friend_to is None:
+	    	fr = Friend(session['id'], userid, 'r')
+	    	db.session.add(fr)
+	    	fr = Friend(userid, session['id'], 'p')
+	    	db.session.add(fr)
+            	db.session.commit()
+	    	isFriend = True
+	if 'remove' in request.form:
+	    db.session.delete(friend_from)
+	    db.session.delete(friend_to)
+	    db.session.commit()
+	    acceptedFriends = False
+	    isFriend = False
+ 
 
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend)
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend, acceptedFriends = acceptedFriends)
 
 @app.route('/users')
 def users():
@@ -127,6 +137,76 @@ def requests():
 	db.session.commit()
 
     return render_template('request.html', form = form, requests = Friend.query.all(), states = Friend.query.all(), userid = sessionid, title='requests')
+
+# Create Circle
+@app.route('/createcircle', methods={'GET', 'POST'})
+def createcircle():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email = session['email']).first()
+
+    if user is None:
+        return redirect(url_for('login'))
+
+    friends = Friend.query.filter_by(userid = session['id'], state='a')
+
+    form = CreateCircleForm()
+
+    choices = []
+    for friend in friends:
+	#print User.query.filter_by(id = friend.friendid).first()
+	username = User.query.filter_by(id = friend.friendid).first().name
+	print username
+	choices.append((friend.friendid, username))
+
+    form.multiple.choices = choices
+    
+    return render_template('createcircle.html', title = 'createcircle', form=form)
+
+
+# Circle
+@app.route('/circle/<circleid>', methods={'GET','POST'})
+def circle(circleid):
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email = session['email']).first()
+
+    if user is None:
+        return redirect(url_for('login'))
+
+    users_in_circle = Circle.query.filter_by(circleid = circleid)
+    users = []
+    
+    for _user in users_in_circle:
+	print _user.userid
+	users.append(User.query.filter_by(id = _user.userid).first())
+
+    return render_template('circle.html', title = 'circle', users = users)
+
+## Circles
+@app.route('/circles', methods={'GET', 'POST'})
+def circles():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email = session['email']).first()
+
+    if user is None:
+        return redirect(url_for('login'))
+
+    friends = Friend.query.filter_by(userid = session['id'], state='a')
+
+    form = CreateCircleForm(request.form)
+
+    circles = Circle.query.group_by(Circle.circleid).filter_by(ownerid = session['id'])
+
+    if request.method == 'POST':
+        if 'submit' in request.form:
+	    return redirect(url_for('createcircle'))
+
+    return render_template('circles.html', title = "circles", form=form, circles = circles)
 
 ## Albums
 @app.route('/album/<int:albumid>')

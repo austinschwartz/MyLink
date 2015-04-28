@@ -1,6 +1,6 @@
-from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory
+from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory, abort
 #from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm, PostForm
 from models import db, User, Album, Picture, Post, Friend, Circle
 import os
 
@@ -10,11 +10,20 @@ app = Flask(__name__, static_url_path='/static')
 #app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
+@app.errorhandler(404)
+def page_not_found(e):
+        return render_template('404.html'), 404
+
+@app.errorhandler(403)
+def forbidden(e):
+        return render_template('403.html'), 403
+
+
 @app.route('/')
 @app.route('/index')
 def index():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return login('Please log in first')
     else:
         friends = Friend.query.filter_by(userid = session['id'])
         friendUsers = []
@@ -25,7 +34,7 @@ def index():
         return render_template('index.html', friends=friendUsers)
 
 ## Users
-@app.route('/user/<userid>', methods={'GET', 'POST'})
+@app.route('/user/<userid>', methods=['GET', 'POST'])
 def user(userid):
     if 'email' not in session:
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
@@ -100,7 +109,8 @@ def post(postid): # no default here, error if there is no postid
 
 @app.route('/posts')
 def posts():
-    return render_template('posts.html', posts = Post.query.all(), title='posts')
+    form = PostForm()
+    return render_template('posts.html', posts = Post.query.all(), title='posts', form=form)
 
 ##Requests
 @app.route('/requests',  methods=['GET','POST'])
@@ -212,30 +222,41 @@ def circles():
 @app.route('/album/<int:albumid>')
 def album(albumid): # no default here, error if there is no albumid
     album = Album.query.filter_by(id = albumid).first()
-    pictures = Picture.query.filter_by(albumid = albumid)
-    return render_template('album.html', album = album, pictures = pictures)
+    ownerid = album.ownerid
+
+    # forbidden if user not logged in and album isnt public
+    if 'email' not in session and album.visibility != 'public':
+        abort(403)
+
+    # show album is user is owner or public
+    if album.visibility == 'public' or ownerid == session['id']: 
+        pictures = Picture.query.filter_by(albumid = albumid)
+        return render_template('album.html', album = album, pictures = pictures, title='album')
+    else:
+        abort(403)
 
 @app.route('/albums')
 def albums():
+    
     return render_template('albums.html', albums = Album.query.all(), title='albums')
 
 
 ## Login/Logout
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login(error=''):
     form = LoginForm()
 
     if 'email' in session:
         return redirect(url_for('index'))
     if request.method =='POST':
         if form.validate() == False:
-            return render_template('login.html', form=form, title='login')
+            return render_template('login.html', form=form, title='login', error=error)
         else:
             session['email'] = form.email.data
 	    session['id'] =  User.query.filter_by(email = form.email.data).first().id
             return redirect(url_for('profile'))
     elif request.method == 'GET':
-        return render_template('login.html', form=form, title='login')
+        return render_template('login.html', form=form, title='login', error=error)
 
 @app.route('/logout')
 def logout():
@@ -263,13 +284,7 @@ def signup():
     elif request.method == 'GET':
         return render_template('register.html', form = form, title='register')
 
-
 ## Files
-@app.route('/<path:path>')
-def send_static(path):
-    return send_from_directory(root, path)
-
-
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     """Upload a new file."""
@@ -277,6 +292,27 @@ def upload():
         save(request.files['upload'])
         return redirect(url_for('index'))
     return render_template('upload.html')
+
+@app.route('/images/albums/<int:albumid>/<filename>')
+def image(albumid, filename):
+    album = Album.query.filter_by(id = albumid).first()
+    ownerid = album.ownerid
+
+    # forbidden if user not logged in and album isnt public
+    if 'email' not in session and album.visibility != 'public':
+        abort(403)
+
+    # show album is user is owner or public
+    if album.visibility == 'public' or ownerid == session['id']: 
+        return send_from_directory('static/images/albums/' + str(albumid), filename)
+    else:
+        abort(403)
+
+# Everything else
+@app.route('/<path:path>')
+def send_static(path):
+    return send_from_directory(root, path)
+
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)

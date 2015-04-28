@@ -1,20 +1,21 @@
+{% from "_formhelpers.html" import render_field %}
+
 {% extends 'default.html' %}
 {% block content %}
 
-Hello {{ session['email'] }}
+<h2>Hello {{ session['email'] }}</h2>
 
+<form action="{{ url_for('profile') }}" method=post class='form-signin'>
 <h1>Update account</h1>
 
 {% for message in form.password.errors %}
 <div class="flash">{{ message }}</div>
 {% endfor %}
-
-<form action="{{ url_for('profile') }}" method = post>
 {{ form.hidden_tag() }}
  
-{{ form.password.label }}
-{{ form.password }}
+{{ render_field(form.password.label, class='sr-only') }}
+{{ render_field(form.password, id='inputPassword', class='form-control', placeholder='Password') }}
  
-{{ form.submit }}
+{{ render_field(form.submit, class='btn btn-lg btn-primary btn-block', value='Submit') }}
 </form>
 {% endblock %}

@@ -11,7 +11,7 @@
     <tr>
       <td><a href="/album/{{ album.id }}">{{ album.id }}</a></td>
       <td>{{ album.name }}</td>
-      <td><a href="/users/{{album.ownerid}}">{{ album.ownerid }}</td>
+      <td><a href="/user/{{ album.ownerid }}">{{ album.ownerid }}</td>
       <td>{{ album.visibility }}</td>
     </tr>
   {% endfor %}

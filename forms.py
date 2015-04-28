@@ -70,4 +70,10 @@ class AcceptDenyForm(Form):
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
     
+class PostForm(Form):
+  textbox = TextAreaField('')
+  submit = SubmitField('')
+ 
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
 

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory, abort
 #from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, PostForm
 from models import db, User, Album, Picture, Post, Friend
 import os
 
@@ -99,7 +99,8 @@ def post(postid): # no default here, error if there is no postid
 
 @app.route('/posts')
 def posts():
-    return render_template('posts.html', posts = Post.query.all(), title='posts')
+    form = PostForm()
+    return render_template('posts.html', posts = Post.query.all(), title='posts', form=form)
 
 ##Requests
 @app.route('/requests',  methods=['GET','POST'])

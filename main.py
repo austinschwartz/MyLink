@@ -255,7 +255,7 @@ def image(albumid, filename):
 # Everything else
 @app.route('/<path:path>')
 def send_static(path):
-    return
+    return send_from_directory(root, path)
 
 
 if __name__ == '__main__':

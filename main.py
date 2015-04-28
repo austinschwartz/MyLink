@@ -161,17 +161,21 @@ def createcircle():
 
     friends = Friend.query.filter_by(userid = session['id'], state='a')
 
-    form = CreateCircleForm()
+    form = CreateCircleForm(request.values)
 
     choices = []
     for friend in friends:
 	#print User.query.filter_by(id = friend.friendid).first()
 	username = User.query.filter_by(id = friend.friendid).first().name
-	print username
 	choices.append((friend.friendid, username))
 
     form.multiple.choices = choices
     
+    if request.method == 'POST':
+	name = request.values.get('name')
+	multiple = request.values.getlist('multiple')
+	
+
     return render_template('createcircle.html', title = 'createcircle', form=form)
 
 

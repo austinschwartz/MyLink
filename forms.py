@@ -71,7 +71,7 @@ class AcceptDenyForm(Form):
     Form.__init__(self, *args, **kwargs)
     
 class CreateCircleForm(Form):
-  name = TextField("Circle Name")
+  name = TextField("Circle Name", default = 'Name of Circle')
   multiple = SelectMultipleField(u'Friends', choices=[])
   submit = SubmitField('Create Circle')
 

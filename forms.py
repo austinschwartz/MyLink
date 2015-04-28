@@ -6,10 +6,10 @@ from models import db, User
 
 
 class RegisterForm(Form):
-  name = TextField("Name",  [validators.Required("Please enter your name.")])
-  email = TextField("Email",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
-  password = PasswordField('Password', [validators.Required("Please enter a password.")])
-  submit = SubmitField("Create account")
+  name = TextField("",  [validators.Required("Please enter your name.")])
+  email = TextField("",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
+  password = PasswordField('', [validators.Required("Please enter a password.")])
+  submit = SubmitField("")
  
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
@@ -27,9 +27,9 @@ class RegisterForm(Form):
 
 
 class LoginForm(Form):
-  email = TextField("Email",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
-  password = PasswordField('Password', [validators.Required("Please enter a password.")])
-  submit = SubmitField("Log In")
+  email = TextField("",  [validators.Required("Please enter your email address."), validators.Email("Please enter your email address.")])
+  password = PasswordField('', [validators.Required("Please enter a password.")])
+  submit = SubmitField('')
    
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
@@ -48,8 +48,8 @@ class LoginForm(Form):
 
 
 class EditProfileForm(Form):
-  password = PasswordField('Password', [validators.Required("Please enter a password.")])
-  submit = SubmitField("Update Account")
+  password = PasswordField('', [validators.Required("Please enter a password.")])
+  submit = SubmitField('')
  
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)

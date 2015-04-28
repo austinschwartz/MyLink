@@ -39,7 +39,7 @@ class Friend(db.Model):
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
-    ownerid = db.Column(db.Text)
+    ownerid = db.Column(db.Integer)
     visibility = db.Column(db.Text)
 
     def __init__(self, name, ownerid, visibility):

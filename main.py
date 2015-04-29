@@ -174,7 +174,13 @@ def createcircle():
     if request.method == 'POST':
 	name = request.values.get('name')
 	multiple = request.values.getlist('multiple')
-	
+	maxidtup = db.session.query(db.func.max(Circle.circleid)).first()
+	maxid = maxidtup[0]+1
+	for friend in multiple:
+	    circle = Circle(name, maxid, session['id'], friend)
+	    db.session.add(circle)
+	db.session.commit()
+	return redirect(url_for('circle', circleid = maxid))
 
     return render_template('createcircle.html', title = 'createcircle', form=form)
 

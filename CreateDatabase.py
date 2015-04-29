@@ -24,10 +24,10 @@ db.session.add(Friend(3, 1, "a")) # 3 has pending request from 1
 db.session.add(Friend(1, 4, "a")) 
 db.session.add(Friend(4, 1, "a"))
 
-db.session.add(Circle("friends", 1, 1, 2))
-db.session.add(Circle("friends", 1, 1, 3))
-db.session.add(Circle("friends", 1, 1, 4))
-db.session.add(Circle("friends", 1, 1, 5))
+db.session.add(Circle("George's Friends", 1, 1, 2))
+db.session.add(Circle("George's Friends", 1, 1, 3))
+db.session.add(Circle("George's Friends", 1, 1, 4))
+db.session.add(Circle("George's Friends", 1, 1, 5))
 
 db.session.add(Album("Vacation Photos", 1, "public"))
 db.session.add(Album("Conspiracy Theories", 4, "public"))
@@ -54,8 +54,8 @@ db.session.add(Picture("image-104.jpg", 5 ))
 db.session.add(Picture("image-105.jpg", 5 ))
 db.session.add(Picture("image-106.jpg", 5 ))
 
-#db.session.add(Post("Today I ate something, pictures enclosed", 1, 1))
-#db.session.add(Post("Life is fun", 2, 2))
+db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 1), )
+db.session.add(Post("Life is fun", 2, 2, 1))
 
 db.session.commit()
 

@@ -67,11 +67,13 @@ class Post(db.Model):
     text = db.Column(db.Text)
     ownerid = db.Column(db.Integer)
     albumid = db.Column(db.Integer)
-    
-    def __init__(self, text, ownerid, albumid):
+    circleid = db.Column(db.Integer)
+
+    def __init__(self, text, ownerid, albumid, circleid):
 	self.text = text
 	self.ownerid = ownerid
 	self.albumid = albumid
+        self.circleid = circleid
 
     def __repr__(self):
 	return '<Post %r>' % self.id

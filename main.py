@@ -261,7 +261,7 @@ def login(error=''):
         else:
             session['email'] = form.email.data
 	    session['id'] =  User.query.filter_by(email = form.email.data).first().id
-            return redirect(url_for('profile'))
+            return redirect(url_for('index'))
     elif request.method == 'GET':
         return render_template('login.html', form=form, title='login', error=error)
 

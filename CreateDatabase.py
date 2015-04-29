@@ -54,8 +54,8 @@ db.session.add(Picture("image-104.jpg", 5 ))
 db.session.add(Picture("image-105.jpg", 5 ))
 db.session.add(Picture("image-106.jpg", 5 ))
 
-db.session.add(Post("Today I ate something, pictures enclosed", 1, 1))
-db.session.add(Post("Life is fun", 2, 2))
+#db.session.add(Post("Today I ate something, pictures enclosed", 1, 1))
+#db.session.add(Post("Life is fun", 2, 2))
 
 db.session.commit()
 

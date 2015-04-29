@@ -31,7 +31,10 @@ def index():
             friendUser = User.query.filter_by(id = friend.friendid).first()
             if friend.state == 'a':
                 friendUsers.append(friendUser)
-        return render_template('index.html', friends=friendUsers)
+        
+        circles = Circle.query.filter_by(userid = session['id'])
+
+        return render_template('index.html', friends=friendUsers, circles=circles)
 
 ## Users
 @app.route('/user/<userid>', methods=['GET', 'POST'])
@@ -152,7 +155,7 @@ def requests():
 @app.route('/createcircle', methods={'GET', 'POST'})
 def createcircle():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return login('Please log in first')
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -179,12 +182,12 @@ def createcircle():
 @app.route('/circle/<circleid>', methods={'GET','POST'})
 def circle(circleid):
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return login('Please log in first')
 
     user = User.query.filter_by(email = session['email']).first()
 
     if user is None:
-        return redirect(url_for('login'))
+        return redirect(url_for('login'), error='Please log in')
 
     users_in_circle = Circle.query.filter_by(circleid = circleid)
     users = []
@@ -196,10 +199,10 @@ def circle(circleid):
     return render_template('circle.html', title = 'circle', users = users)
 
 ## Circles
-@app.route('/circles', methods={'GET', 'POST'})
+@app.route('/circles', methods=['GET', 'POST'])
 def circles():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('login'), error='Please log in')
 
     user = User.query.filter_by(email = session['email']).first()
 

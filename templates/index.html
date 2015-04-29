@@ -1,25 +1,22 @@
 {% extends "default.html" %}
 {% block content %}
 
-<p>Activity Feed</p>
-
-<p>Friends:</p>
-<table>
+<div class='col-lg-12'>
+  friends:
+  <ul>
   {% for friend in friends %}
-  {{ friends }}
-    <tr>
-      <td><img src="/images/users/{{ friend.id }}/{{ friend.picture }}"/ style="width: 100px"></td>
-      <td>{{ friend.id }}</td>
-      <td>{{ friend.friendid }}</td>
-      <td>{{ friend.state }}</td>
-    </tr>
+  <li>{{ friend.name }}</li>
   {% endfor %}
-</table>
+  </ul>
+</div>
 
+<div class='col-lg-8'>
 <p>Circles you belong to:</p>
+<ul>
 {% for circle in circles %}
-  {{ circle.circleid }} - {{ circle.ownerid }} - {{ circle.ownerid }}
+<li>{{ circle.id }} - {{ circle.circlename }} - {{ circle.circleid }} - {{ circle.ownerid }} - {{ circle.userid }}</li>
 {% endfor %}
-
+</ul>
+</div>
 
 {% endblock %}

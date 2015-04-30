@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory, abort
 #from flask.ext.storage.local import LocalStorage
-from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm, PostForm
+from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm, PostForm, DeleteCircleForm, AddFriendToCircleForm
 from models import db, User, Album, Picture, Post, Friend, Circle
 import os
 
@@ -167,13 +167,13 @@ def createcircle():
     form = CreateCircleForm(request.values)
 
     choices = []
+
     for friend in friends:
 	#print User.query.filter_by(id = friend.friendid).first()
 	username = User.query.filter_by(id = friend.friendid).first().name
-	choices.append((friend.friendid, username))
+	choices.append((str(friend.friendid), username))
 
     form.multiple.choices = choices
-    
     if request.method == 'POST':
 	name = request.values.get('name')
 	multiple = request.values.getlist('multiple')
@@ -199,14 +199,36 @@ def circle(circleid):
     if user is None:
         return redirect(url_for('login'), error='Please log in')
 
+    form = AddFriendToCircleForm(request.values)
     users_in_circle = Circle.query.filter_by(circleid = circleid)
     users = []
+    friendslist = []
     
-    for _user in users_in_circle:
-	print _user.userid
-	users.append(User.query.filter_by(id = _user.userid).first())
+    circle = Circle.query.group_by(Circle.circleid).filter_by(circleid = circleid, ownerid = session['id']).first()
 
-    return render_template('circle.html', title = 'circle', users = users)
+    friends = Friend.query.filter_by(userid = session['id'], state='a')
+    userids = []
+    #session['users_in_circle'] = []
+    for _user in users_in_circle:
+	users.append(User.query.filter_by(id = _user.userid).first().name)
+	#session['users_in_circle'].append(_user.userid)
+	#print _user.userid
+    
+    for friend in friends:
+	user = User.query.filter_by(id = friend.friendid).first()
+	username = user.name
+	userid = user.id
+	friendslist.append((username, userid))
+    
+    if request.method == 'POST':
+	if 'hidden' in request.form:
+	    print "checkbox"
+	    #session['users_in_circle'] = users
+	    #print session['users_in_circle']
+	    #return redirect(url_for('createcircle'))
+
+
+    return render_template('circle.html', title = 'circle', form = form, users = users, circle = circle, circleid = circleid, friendslist = friendslist)
 
 ## Circles
 @app.route('/circles', methods=['GET', 'POST'])
@@ -222,14 +244,22 @@ def circles():
     friends = Friend.query.filter_by(userid = session['id'], state='a')
 
     form = CreateCircleForm(request.form)
+    delete_circle_form = DeleteCircleForm(request.values)
 
     circles = Circle.query.group_by(Circle.circleid).filter_by(ownerid = session['id'])
 
     if request.method == 'POST':
         if 'submit' in request.form:
 	    return redirect(url_for('createcircle'))
+	elif 'hidden' in request.form:
+	    del_circleid = request.values['hidden']
+	    del_circles = Circle.query.filter_by(circleid = del_circleid)
+	    for del_circle in del_circles:
+		db.session.delete(del_circle)
+		db.session.commit()
+		circles = Circle.query.group_by(Circle.circleid).filter_by(ownerid = session['id'])
 
-    return render_template('circles.html', title = "circles", form=form, circles = circles)
+    return render_template('circles.html', title = "circles", form=form, delete_circle_form = delete_circle_form, circles = circles)
 
 ## Albums
 @app.route('/album/<int:albumid>')

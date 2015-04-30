@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import validators
-from wtforms.fields import TextField, TextAreaField, SubmitField, PasswordField, SelectField, HiddenField, SelectMultipleField
+from wtforms.fields import TextField, TextAreaField, SubmitField, PasswordField, SelectField, HiddenField, SelectMultipleField, BooleanField
 from wtforms.validators import ValidationError
 from models import db, User
 
@@ -85,3 +85,16 @@ class PostForm(Form):
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
 
+class DeleteCircleForm(Form):
+  delete = SubmitField('Delete Circle')
+  hidden = HiddenField('Hidden')
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+
+class AddFriendToCircleForm(Form):
+  checkbox = BooleanField(u'Friends')
+  hidden = HiddenField('Hidden')
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)

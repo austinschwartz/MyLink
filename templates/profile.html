@@ -10,6 +10,9 @@
 <div class="flash">{{ message }}</div>
 {% endfor %}
 {{ form.hidden_tag() }}
+   
+{{ render_field(form.name.label, class='sr-only') }}
+{{ render_field(form.name, id='inputName', class='form-control', user.name) }}
  
 {{ render_field(form.password.label, class='sr-only') }}
 {{ render_field(form.password, id='inputPassword', class='form-control', placeholder='Password') }}

@@ -50,6 +50,7 @@ class LoginForm(Form):
 
 class EditProfileForm(Form):
   password = PasswordField('', [validators.Required("Please enter a password.")])
+  name = TextField('', [])
   submit = SubmitField('')
  
   def __init__(self, *args, **kwargs):
@@ -81,7 +82,8 @@ class CreateCircleForm(Form):
 
 class PostForm(Form):
   textbox = TextAreaField('')
-  multiple = SelectMultipleField('', choices=[])
+  multiple = SelectMultipleField('', choices=[]) # circles
+  multiple2 = SelectField('', choices=[]) # albums
   submit = SubmitField('')
  
   def __init__(self, *args, **kwargs):

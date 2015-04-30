@@ -14,6 +14,9 @@
       {{ render_field(form.submit, class='btn btn-md', value='Post') }}
       </div>
     </div>
+    <div class='col-md-3'>
+      {{ render_field(form.multiple2, class='form-control') }}
+    </div>
   </form>
 </div>
 
@@ -21,25 +24,46 @@
 <div class='col-lg-12'>
   <div class='posts'>
   {% for post in posts|sort(attribute='createdate', reverse=True) %}
-  <div class='post'>
-    <div class="img">
-      <img src="/images/users/{{ post.ownerid }}/{{ users[post.ownerid - 1].picture }}"/>
+    <div class='post'>
+      <div class="above">
+        <div class="img">
+          <img src="/images/users/{{ post.ownerid }}/{{ users[post.ownerid - 1].picture }}" class="face"/>
+        </div>
+        <div class='t'>
+          <a href="/user/{{ post.ownerid }}">
+            <span class='name'>{{ users[post.ownerid - 1].name }}</span>
+          </a>
+          <span class='date'>{{ post.createdate.strftime("%b %d %Y %I:%M %p")}}</span>
+        </div>
+
+        <div class='b'>
+          <span class='text'>{{ post.text }}</span>
+        </div>
+
+        <div class='a'>
+          {% if post.albumid > 0 %}
+          <span class='album'>
+            <a href="/album/{{ post.albumid }}">Attached Photos</a>
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="below">
+        {% if post.albumid > 0 %}
+        <table>
+          <tr>
+          {% for picture in pictures if picture.albumid == albums[post.albumid-1].id %}
+            <td>
+              <div class="photo">
+                <img src="/images/albums/{{albums[post.albumid - 1].id}}/{{picture.filename }}"/>
+              </div>
+            </td>
+          {% endfor %}
+          </tr>
+        </table>
+        {% endif %}
+      </div>
     </div>
-    <div class='t'>
-      <a href="/user/{{ post.ownerid }}">
-        <span class='name'>{{ users[post.ownerid - 1].name }}</span>
-      </a>
-      <span class='date'>{{ post.createdate.strftime("%b %d %Y %I:%M %p") }}</span>
-    </div>
-    <div class='b'>
-      <span class='text'>{{ post.text }}</span>
-    </div>
-    <div class='a'>
-      {% if post.albumid > 0 %}
-      <span class='album'><a href="/album/{{ post.albumid }}">Attached Photos</a></span>
-      {% endif %}
-    </div>
-  </div>
   {% endfor %}
   </div>
 </div>

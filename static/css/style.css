@@ -104,18 +104,30 @@ body {
 
 .post {
   background-color: #A5D7F5;
-  border-radius: 10px;
-  height: 105px;
+  /*border-radius: 10px;*/
+  min-height: 80px;
+  max-height: 220px;
   margin-top: 21px;
   font-family: "Open Sans", sans-serif;
   font-size: 11px;
-  padding: 10 10 0 0;
   color: #5F859B;
   font-weight: bold;
 }
 
+body .above {
+  padding: 10 10 0 0;
+}
 
-.post img {
+body .below {
+  min-height: 0px;
+  max-height: 100px;
+  overflow: scroll;
+  margin-top: 5px;
+  padding: 10px;
+}
+
+
+.face {
   float:left;
   width: 85px;
   height: 85px;
@@ -124,6 +136,11 @@ body {
   border-radius:50%;
 }
 
+body .photo img {
+  height: 75px;
+  display: block;
+  margin-right: 10px;
+}
 
 body div.t {
   font-size: 12px;
@@ -144,6 +161,10 @@ body span.name {
 body div.a {
   margin-top: -10px;
   float:right;
+}
+
+body span.album {
+  margin-top: 50px;
 }
 
 body div.b {

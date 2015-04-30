@@ -51,7 +51,6 @@ def index():
                 filter(Friend.userid == session['id']).all()
         
         usersPosts = Post.query.filter_by(ownerid = session['id']).all()
-        print usersPosts
         
         allPosts = []
         for post in posts:
@@ -67,39 +66,46 @@ def index():
         for usersPost in usersPosts:
             allPosts.append(usersPost)
 
-        print allPosts
     
         allPosts = list(set(allPosts))
         sorted(allPosts, key=attrgetter('createdate'))
 
-
         form = PostForm(request.values)
 
         choices = []
-        #choices.append((-1, 'All Friends'))
         for circle in owncircles:
             choices.append((circle.circleid, circle.circlename))
+        
+        ownalbums = Album.query.filter_by(ownerid = session['id']).all()
 
+        userAlbums = []
+        userAlbums.append((-1, "No Album"))
+        for album in ownalbums:
+            userAlbums.append((album.id, album.name))
+        
         form.multiple.choices = choices
+        form.multiple2.choices = userAlbums
+
         if request.method == 'POST':
             posttext = form.textbox.data
             form.textbox.data = ""
             multiple = request.values.getlist('multiple')
-            #print posttext +  "going to these circles: " +  str(multiple)
+            aid = int(request.values.getlist('multiple2')[0])
+            
             if len(multiple) == 0: # add to all friends
-                post = Post(posttext, session['id'], -1, -1, datetime.datetime.now())
+                post = Post(posttext, session['id'], aid, -1, datetime.datetime.now())
                 db.session.add(post)
                 allPosts.append(post)
             currenttime = datetime.datetime.now()
             for cid in multiple:
-                post = Post(posttext, session['id'], -1, int(cid), currenttime)
+                post = Post(posttext, session['id'], aid, int(cid), currenttime)
                 db.session.add(post)
                 allPosts.append(post)
             db.session.commit()
 
         users = User.query.order_by(User.id).all()
         albums = Album.query.order_by(Album.id).all()
-        print users
+        pictures = Picture.query.order_by(Picture.id).all()
         return render_template('index.html', 
                 friends = friendUsers, 
                 owncircles = owncircles, 
@@ -107,6 +113,7 @@ def index():
                 posts = allPosts,
                 users = users,
                 albums = albums,
+                pictures = pictures,
                 form = form)
 
 ## Users
@@ -175,7 +182,7 @@ def profile():
         user = User.query.filter_by(email=session['email']).first()
         #form.password = user.password
 
-        return render_template('profile.html', form=form, title='profile')
+        return render_template('profile.html', form=form, title='profile', user=user)
     
 
 ## Posts

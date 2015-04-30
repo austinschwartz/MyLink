@@ -264,9 +264,8 @@ def circle(circleid):
     if user is None:
         return redirect(url_for('login'), error='Please log in')
 
-    form = AddFriendToCircleForm(request.values)
+    form = AddFriendToCircleForm()
 
-    users_in_circle = Circle.query.filter_by(circleid = circleid)
     users = []
     friendslist = []
     
@@ -274,29 +273,50 @@ def circle(circleid):
 
     friends = Friend.query.filter_by(userid = session['id'], state='a')
     userids = []
-    #session['users_in_circle'] = []
-    for _user in users_in_circle:
-	users.append(User.query.filter_by(id = _user.userid).first().id)
-	#session['users_in_circle'].append(_user.userid)
-	#print _user.userid
+    data = []
     
     for friend in friends:
 	user = User.query.filter_by(id = friend.friendid).first()
 	username = user.name
 	userid = user.id
 	if userid in users:
-	    friendslist.append((username, userid, True))
+	    friendslist.append((userid, username))
 	else:
-	    friendslist.append((username, userid, False))
-    
+	    friendslist.append((userid, username))
+   
+    form.checkbox.choices = friendslist
+
+    users_in_circle = Circle.query.filter_by(circleid = circleid)
+
+
+
     if request.method == 'POST':
 	if 'submit' in request.form:
 	    print form.checkbox.data
-	    #session['users_in_circle'] = users
-	    #print session['users_in_circle']
-	    #return redirect(url_for('createcircle'))
+	    for box in form.checkbox.data:
+		query = Circle.query.filter_by(circleid=circleid, ownerid=session['id'], userid=box).first()
+		if query is None:
+		    circle = Circle(circle.circlename, circleid, session['id'], box)
+		    db.session.add(circle)
+		    db.session.commit()
+	    users_in_circle = Circle.query.filter_by(circleid = circleid)
+	    for u in users_in_circle:
+		if unicode(u.userid) not in form.checkbox.data:
+		    db.session.delete(u)
+		    db.session.commit()
+	    
+	    #if query is not None:
+		    #if query.userid not in form.checkbox.data:
+		#	db.session.delete(query)
+	     #db.session.commit()
+    
+    users_in_circle = Circle.query.filter_by(circleid = circleid)
 
+    for _user in users_in_circle:
+	dataid = User.query.filter_by(id = _user.userid).first().id
+	data.append(unicode(dataid))
 
+    form.checkbox.data = data
     return render_template('circle.html', title = 'circle', form = form, circleid = circleid, friendslist = friendslist, circle = circle)
 
 ## Circles

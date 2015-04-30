@@ -1,6 +1,7 @@
 from flask.ext.wtf import Form
 from wtforms import validators
 from wtforms.fields import TextField, TextAreaField, SubmitField, PasswordField, SelectField, HiddenField, SelectMultipleField, BooleanField
+from wtforms import widgets
 from wtforms.validators import ValidationError
 from models import db, User
 
@@ -94,7 +95,12 @@ class DeleteCircleForm(Form):
     Form.__init__(self, *args, **kwargs)
 
 class AddFriendToCircleForm(Form):
-  checkbox = BooleanField(u'Friends')
+  checkbox = SelectMultipleField(
+        'Friends',
+        choices=[],
+        option_widget=widgets.CheckboxInput(),
+        widget=widgets.ListWidget(prefix_label=False)
+        )
   hidden = HiddenField('Hidden')
   submit = SubmitField("Submit Change")
 

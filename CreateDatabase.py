@@ -1,4 +1,5 @@
 from models import db, User, Picture, Album, Friend, Post, Circle
+from datetime import date, timedelta
 
 db.drop_all()
 db.create_all()
@@ -58,11 +59,11 @@ db.session.add(Picture("image-104.jpg", 5 ))
 db.session.add(Picture("image-105.jpg", 5 ))
 db.session.add(Picture("image-106.jpg", 5 ))
 # text ownerid albumid circleid createdate(optional)
-db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 1))
-db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 2))
-db.session.add(Post("Life is fun", 1, 2, 1))
-db.session.add(Post("Life is a box of chocolates", 2, 3, 1))
-db.session.add(Post("George is a communist, don't believe his lies!", 2, 4, 3))
+db.session.add(Post("George is a communist, don't believe his lies!", 2, 4, 3, date(1943, 3, 13)))
+db.session.add(Post("Life is a box of chocolates", 2, 3, 1, date.today() - timedelta(days=500)))
+db.session.add(Post("Life is fun", 1, 2, 1, date.today() - timedelta(days=5)))
+db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 2, date.today() - timedelta(days=3)))
+db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 1, date.today() - timedelta(days=1)))
 
 db.session.commit()
 

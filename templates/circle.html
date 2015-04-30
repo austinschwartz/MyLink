@@ -1,9 +1,27 @@
 {% extends 'default.html' %}
 
 {% block content %}
+<h1> {{ circle.circlename }}</h1>
 
-  {% for user in users %}
-    {{ user.id }}
+<table class="table">
+  <tr>
+    <th>name</th>
+    <th>checkbox</th>
+  </tr>
+  {% for friend in friendslist %}
+    <tr><td>{{ friend[0] }}</td>
+    <td><form action="{{ url_for('circle', circleid = circleid) }}" method = post>
+      {{ form.hidden(value = friend[1]) }}
+      {% if friend[0] in users %}
+        {{ form.checkbox(value = 'y') }}
+      {% else %}
+        {{ form.checkbox(value ='n') }}
+      {% endif %}
+    </form></td>
+    </tr>
+    
   {% endfor %}
+</table>
+
   
 {% endblock %}

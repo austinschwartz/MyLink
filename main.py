@@ -20,7 +20,10 @@ def forbidden(e):
 
 
 @app.route('/')
-@app.route('/index')
+def blank():
+    return index()
+
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     if 'email' not in session:
         return login('Please log in first')
@@ -32,14 +35,29 @@ def index():
             if friend.state == 'a':
                 friendUsers.append(friendUser)
         
-        circles = Circle.query.filter_by(ownerid = session['id']).group_by(Circle.circleid)
+        circles = Circle.query.filter_by(userid = session['id']).group_by(Circle.circleid)
         
+        owncircles = Circle.query.filter_by(ownerid = session['id']).group_by(Circle.circleid)
+
         posts = db.session.query(Post, Circle).\
                 filter(Post.circleid == Circle.circleid).\
-                filter(Circle.ownerid == session['id']).\
+                filter(Circle.userid == session['id']).\
                 group_by(Post.id).all()
 
-        return render_template('index.html', friends=friendUsers, circles=circles, posts = posts)
+        form = PostForm(request.values)
+
+        choices = []
+        choices.append((-1, 'All Friends'))
+        for circle in owncircles:
+            choices.append((circle.circleid, circle.circlename))
+
+        form.multiple.choices = choices
+        if request.method == 'POST':
+            name = form.textbox.data
+            multiple = request.values.getlist('multiple')
+            print name +  "going to these circles: " +  str(multiple)
+        
+        return render_template('index.html', friends=friendUsers, owncircles = owncircles, circles=circles, posts = posts, form = form)
 
 ## Users
 @app.route('/user/<userid>', methods=['GET', 'POST'])
@@ -180,9 +198,9 @@ def createcircle():
     form.multiple.choices = choices
     
     if request.method == 'POST':
-	name = request.values.get('name')
+        name = request.values.get('name')
+
 	multiple = request.values.getlist('multiple')
-	
 
     return render_template('createcircle.html', title = 'createcircle', form=form)
 

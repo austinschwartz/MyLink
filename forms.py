@@ -71,15 +71,16 @@ class AcceptDenyForm(Form):
     Form.__init__(self, *args, **kwargs)
     
 class CreateCircleForm(Form):
-  name = TextField("Circle Name", default = 'Name of Circle')
-  multiple = SelectMultipleField(u'Friends', choices=[])
-  submit = SubmitField('Create Circle')
+  name = TextField('')
+  multiple = SelectMultipleField('', choices=[])
+  submit = SubmitField('')
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
 
 class PostForm(Form):
   textbox = TextAreaField('')
+  multiple = SelectMultipleField('', choices=[])
   submit = SubmitField('')
  
   def __init__(self, *args, **kwargs):

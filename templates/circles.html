@@ -1,5 +1,6 @@
-{% extends 'default.html' %}
+{% from "_formhelpers.html" import render_field %}
 
+{% extends 'default.html' %}
 {% block content %}
  
 <table class="table">
@@ -15,9 +16,11 @@
   {% endfor %}
 </table>
 
+<div class='col-lg-5'>
 <form action="{{ url_for('circles') }}" method = post>
-  {{ form.submit }}
+  {{ render_field(form.submit, class='btn btn-primary btn-block', value='Create Circle') }}
 </form>
+</div>
 
  
 {% endblock %}

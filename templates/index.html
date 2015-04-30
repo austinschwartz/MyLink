@@ -1,3 +1,5 @@
+{% from "_formhelpers.html" import render_field %}
+
 {% extends "default.html" %}
 {% block content %}
 
@@ -8,6 +10,15 @@
   <li>{{ friend.name }}</li>
   {% endfor %}
   </ul>
+</div>
+
+<div class='col-lg-8'>
+<p>Circles you own:</p>
+<ul>
+{% for circle in owncircles %}
+<li>{{ circle.circlename }} - {{ circle.circleid }} - {{ circle.ownerid }}</li>
+{% endfor %}
+</ul>
 </div>
 
 <div class='col-lg-8'>
@@ -23,8 +34,20 @@
   <p>Posts</p>
   <ul>
   {% for post in posts %}
-  <li> {{ post }} - {{ post[0].text }} - {{ post[0].ownerid }}
+  <li> {{ post }} - {{ post[0].text }} - {{ post[0].ownerid }} - {{ post[0].albumid }}
   {% endfor %}
   </ul>
 </div>
+<div class='col-lg-12'>
+  <form action="{{ url_for('index') }}" method = post>
+    <div class='col-md-3'>
+      {{ render_field(form.multiple, class='form-control') }}
+    </div>
+    <div class='col-md-6'>
+      {{ render_field(form.textbox, id='inputTextArea', class='form-control', placeholder='Post') }}
+      {{ render_field(form.submit, class='btn btn-lg btn-primary btn-block', value='Post') }}
+    </div>
+  </form>
+</div>
+
 {% endblock %}

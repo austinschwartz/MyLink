@@ -1,11 +1,13 @@
+{% from "_formhelpers.html" import render_field %}
+
 {% extends 'default.html' %}
-
 {% block content %}
-
-<form action="{{ url_for('createcircle') }}" method=post>
-{{ form.name }}<br>
-{{ form.multiple }}<br>
-{{ form.submit }}
+<div class="col-lg-5 col-lg-offset-4">
+<form action="{{ url_for('createcircle') }}" method=post class='form-select'>
+{{ render_field(form.name, class='form-control', placeholder='Name of Circle') }}<br>
+{{ render_field(form.multiple, class='form-control') }}<br>
+{{ render_field(form.submit, class='btn btn-primary btn-block', value='Create Circle') }}
 </form>
+</div>
   
 {% endblock %}

@@ -3,8 +3,6 @@
 {% extends 'default.html' %}
 {% block content %}
 
-<h2>Hello {{ session['email'] }}</h2>
-
 <form action="{{ url_for('profile') }}" method=post class='form-signin'>
 <h1>Update account</h1>
 

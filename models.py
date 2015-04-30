@@ -12,12 +12,14 @@ class User(db.Model):
     email = db.Column(db.Text)
     password = db.Column(db.Text)
     picture = db.Column(db.Text)
+    verified = db.Column(db.Text)
 
-    def __init__(self, name, email, password, picture=""):
+    def __init__(self, name, email, password, verified, picture=""):
 	self.name = name
         self.email = email
         self.password = password
         self.picture = picture
+	self.verified = verified
 
     def __repr__(self):
         return '<User %r>' % self.email

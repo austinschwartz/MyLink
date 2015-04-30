@@ -7,17 +7,19 @@
   <tr>
     <th>name</th>
     <th>checkbox</th>
+
   </tr>
   {% for friend in friendslist %}
     <tr><td>{{ friend[0] }}</td>
     <td><form action="{{ url_for('circle', circleid = circleid) }}" method = post>
       {{ form.hidden(value = friend[1]) }}
-      {% if friend[0] in users %}
-        {{ form.checkbox(value = 'y') }}
+      {% if friend[2] == True %}
+        {{ form.checkbox(checked = True) }}
       {% else %}
-        {{ form.checkbox(value ='n') }}
+        {{ form.checkbox(checked = False) }}
       {% endif %}
-    </form></td>
+      {{ form.submit }} </td>
+    </form>
     </tr>
     
   {% endfor %}

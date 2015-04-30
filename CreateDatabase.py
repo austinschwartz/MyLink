@@ -29,7 +29,7 @@ db.session.add(Circle("George's Friends", 1, 1, 2))
 db.session.add(Circle("George's Friends", 1, 1, 3))
 db.session.add(Circle("George's Friends", 1, 1, 4))
 db.session.add(Circle("George's Friends", 1, 1, 5))
-db.session.add(Circle("George's Family", 2, 1, 6))
+db.session.add(Circle("George's Family", 2, 1, 3))
 db.session.add(Circle("Mary's Friends", 3, 2, 3))
 db.session.add(Circle("Mary's Friends", 3, 2, 4))
 

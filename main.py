@@ -225,6 +225,7 @@ def circle(circleid):
         return redirect(url_for('login'), error='Please log in')
 
     form = AddFriendToCircleForm(request.values)
+
     users_in_circle = Circle.query.filter_by(circleid = circleid)
     users = []
     friendslist = []
@@ -235,7 +236,7 @@ def circle(circleid):
     userids = []
     #session['users_in_circle'] = []
     for _user in users_in_circle:
-	users.append(User.query.filter_by(id = _user.userid).first().name)
+	users.append(User.query.filter_by(id = _user.userid).first().id)
 	#session['users_in_circle'].append(_user.userid)
 	#print _user.userid
     
@@ -243,17 +244,20 @@ def circle(circleid):
 	user = User.query.filter_by(id = friend.friendid).first()
 	username = user.name
 	userid = user.id
-	friendslist.append((username, userid))
+	if userid in users:
+	    friendslist.append((username, userid, True))
+	else:
+	    friendslist.append((username, userid, False))
     
     if request.method == 'POST':
-	if 'hidden' in request.form:
-	    print "checkbox"
+	if 'submit' in request.form:
+	    print form.checkbox.data
 	    #session['users_in_circle'] = users
 	    #print session['users_in_circle']
 	    #return redirect(url_for('createcircle'))
 
 
-    return render_template('circle.html', title = 'circle', form = form, users = users, circle = circle, circleid = circleid, friendslist = friendslist)
+    return render_template('circle.html', title = 'circle', form = form, circleid = circleid, friendslist = friendslist, circle = circle)
 
 ## Circles
 @app.route('/circles', methods=['GET', 'POST'])

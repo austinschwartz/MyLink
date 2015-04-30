@@ -96,6 +96,9 @@ class DeleteCircleForm(Form):
 class AddFriendToCircleForm(Form):
   checkbox = BooleanField(u'Friends')
   hidden = HiddenField('Hidden')
+  submit = SubmitField("Submit Change")
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
+
+

@@ -14,9 +14,17 @@
 <p>Circles you belong to:</p>
 <ul>
 {% for circle in circles %}
-<li>{{ circle.id }} - {{ circle.circlename }} - {{ circle.circleid }} - {{ circle.ownerid }} - {{ circle.userid }}</li>
+<li>{{ circle.circlename }} - {{ circle.circleid }} - {{ circle.ownerid }}</li>
 {% endfor %}
 </ul>
 </div>
 
+<div class='col-lg-12'>
+  <p>Posts</p>
+  <ul>
+  {% for post in posts %}
+  <li> {{ post }} - {{ post[0].text }} - {{ post[0].ownerid }}
+  {% endfor %}
+  </ul>
+</div>
 {% endblock %}

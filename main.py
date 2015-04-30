@@ -32,9 +32,14 @@ def index():
             if friend.state == 'a':
                 friendUsers.append(friendUser)
         
-        circles = Circle.query.filter_by(userid = session['id'])
+        circles = Circle.query.filter_by(ownerid = session['id']).group_by(Circle.circleid)
+        
+        posts = db.session.query(Post, Circle).\
+                filter(Post.circleid == Circle.circleid).\
+                filter(Circle.ownerid == session['id']).\
+                group_by(Post.id).all()
 
-        return render_template('index.html', friends=friendUsers, circles=circles)
+        return render_template('index.html', friends=friendUsers, circles=circles, posts = posts)
 
 ## Users
 @app.route('/user/<userid>', methods=['GET', 'POST'])
@@ -234,7 +239,7 @@ def circle(circleid):
 @app.route('/circles', methods=['GET', 'POST'])
 def circles():
     if 'email' not in session:
-        return redirect(url_for('login'), error='Please log in')
+        return login( error='Please log in')
 
     user = User.query.filter_by(email = session['email']).first()
 

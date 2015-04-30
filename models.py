@@ -1,6 +1,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Integer, Column, DateTime, func
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -68,12 +68,14 @@ class Post(db.Model):
     ownerid = db.Column(db.Integer)
     albumid = db.Column(db.Integer)
     circleid = db.Column(db.Integer)
+    createdate = db.Column(db.DateTime, default=func.now())
 
-    def __init__(self, text, ownerid, albumid, circleid):
+    def __init__(self, text, ownerid, albumid, circleid, createdate=func.now()):
 	self.text = text
 	self.ownerid = ownerid
 	self.albumid = albumid
         self.circleid = circleid
+        self.createdate = createdate
 
     def __repr__(self):
 	return '<Post %r>' % self.id

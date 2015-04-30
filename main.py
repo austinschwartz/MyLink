@@ -5,12 +5,12 @@ from models import db, User, Album, Picture, Post, Friend, Circle
 import os
 import datetime
 from operator import attrgetter
+from werkzeug import secure_filename
 
 app = Flask(__name__, static_url_path='/static')
-#app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
-#app.config['UPLOADS_FOLDER'] = os.path.realpath('.') + '/static/'
-#app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
+
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+UPLOAD_FOLDER = os.path.join(root, 'images')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -28,7 +28,7 @@ def blank():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if 'email' not in session:
-        return login('Please log in first')
+        return login('Please log in')
     else:
         friends = Friend.query.filter_by(userid = session['id'])
         friendUsers = []
@@ -84,13 +84,35 @@ def index():
             userAlbums.append((album.id, album.name))
         
         form.multiple.choices = choices
-        form.multiple2.choices = userAlbums
 
         if request.method == 'POST':
+            fileFound = False
+            aid = -1
+            files = request.files.getlist('files')
+            if files[0]:
+                fileFound = True
+                a = Album("name", session['id'])
+                db.session.add(a)
+                db.session.commit()
+                album = db.session.query(Album).order_by(Album.id.desc()).first()
+                aid = album.id
+
+                for file in files:
+                    filename = secure_filename(file.filename)
+                    print filename
+                    print aid
+                    dirpath = os.path.join(UPLOAD_FOLDER, 'albums/' + str(aid))
+                    try:
+                        os.mkdir(dirpath)
+                    except:
+                        pass
+                    file.save(os.path.join(dirpath, filename))
+                    p = Picture(filename, aid)
+                    db.session.add(p)
+                db.session.commit()
             posttext = form.textbox.data
             form.textbox.data = ""
             multiple = request.values.getlist('multiple')
-            aid = int(request.values.getlist('multiple2')[0])
             
             if len(multiple) == 0: # add to all friends
                 post = Post(posttext, session['id'], aid, -1, datetime.datetime.now())
@@ -134,7 +156,7 @@ def user(userid):
 	    isFriend = True
 	    if friends.state == 'a':
 		acceptedFriends = True
-
+    
     if request.method == 'POST':
 	friend_from = Friend.query.filter_by(friendid = userid, userid = session['id']).first()
 	friend_to = Friend.query.filter_by(friendid = session['id'], userid = userid).first() 
@@ -154,10 +176,12 @@ def user(userid):
 	    isFriend = False
  
 
-    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend, acceptedFriends = acceptedFriends)
+    return render_template('user.html', user = User.query.filter_by(id = userid).first(), form=form, isFriend = isFriend, acceptedFriends = acceptedFriends, sessionid = session['id'])
 
 @app.route('/users')
 def users():
+    if 'email' not in session:
+        return login("Please log in")
     return render_template('users.html', users = User.query.all(), title="users")
 
 @app.route('/profile', methods=['GET','POST'])
@@ -187,12 +211,10 @@ def profile():
     
 
 ## Posts
-@app.route('/post/<int:postid>')
-def post(postid): # no default here, error if there is no postid
-    pass
-
 @app.route('/posts')
 def posts():
+    if 'email' not in session:
+        return login("Please log in")
     form = PostForm()
     return render_template('posts.html', posts = Post.query.all(), title='posts', form=form)
 
@@ -200,7 +222,7 @@ def posts():
 @app.route('/requests',  methods=['GET','POST'])
 def requests():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return login("Please log in")
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -375,11 +397,11 @@ def album(albumid): # no default here, error if there is no albumid
     ownerid = album.ownerid
 
     # forbidden if user not logged in and album isnt public
-    if 'email' not in session and album.visibility != 'public':
+    if 'email' not in session:
         abort(403)
 
     # show album is user is owner or public
-    if album.visibility == 'public' or ownerid == session['id']: 
+    if ownerid == session['id']: 
         pictures = Picture.query.filter_by(albumid = albumid)
         return render_template('album.html', album = album, pictures = pictures, title='album')
     else:
@@ -448,14 +470,10 @@ def image(albumid, filename):
     ownerid = album.ownerid
 
     # forbidden if user not logged in and album isnt public
-    if 'email' not in session and album.visibility != 'public':
+    if 'email' not in session:
         abort(403)
 
-    # show album is user is owner or public
-    if album.visibility == 'public' or ownerid == session['id']: 
-        return send_from_directory('static/images/albums/' + str(albumid), filename)
-    else:
-        abort(403)
+    return send_from_directory('static/images/albums/' + str(albumid), filename)
 
 # Everything else
 @app.route('/<path:path>')

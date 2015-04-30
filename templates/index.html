@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class='col-lg-12'>
-  <form action="{{ url_for('index') }}" method = post>
+  <form action="{{ url_for('index') }}" method = "post" enctype="multipart/form-data">
     <div class='col-md-3'>
       {{ render_field(form.multiple, class='form-control') }}
     </div>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class='col-md-3'>
-      {{ render_field(form.multiple2, class='form-control') }}
+      <p>{{ render_field(form.files, multiple='multiple', class='form-control', value='')}}</p>
     </div>
   </form>
 </div>
@@ -40,16 +40,9 @@
           <span class='text'>{{ post.text }}</span>
         </div>
 
-        <div class='a'>
-          {% if post.albumid > 0 %}
-          <span class='album'>
-            <a href="/album/{{ post.albumid }}">Attached Photos</a>
-          </span>
-          {% endif %}
-        </div>
       </div>
       <div class="below">
-        {% if post.albumid > 0 %}
+      {% if post.albumid > 0 %}
         <table>
           <tr>
           {% for picture in pictures if picture.albumid == albums[post.albumid-1].id %}
@@ -61,14 +54,14 @@
           {% endfor %}
           </tr>
         </table>
-        {% endif %}
+      {% endif %}
       </div>
     </div>
   {% endfor %}
   </div>
 </div>
 
-
+<!--
 <div class='col-lg-12'>
   friends:
   <ul>
@@ -95,5 +88,5 @@
 {% endfor %}
 </ul>
 </div>
-
+-->
 {% endblock %}

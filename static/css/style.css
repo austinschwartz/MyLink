@@ -66,6 +66,7 @@ body {
   }
 }
 
+/*register form*/
 
 .form-signin {
   max-width: 330px;
@@ -102,6 +103,8 @@ body {
   border-top-right-radius: 0;
 }
 
+
+/*index page*/
 
 .post {
   background-color: #EEE;
@@ -182,3 +185,21 @@ body div.b {
 body span.text {
   overflow: hidden;
 }
+
+
+/*profile page*/
+
+
+.user .left {
+  float: left;
+  margin-bottom: 20px;
+}
+
+.user .name {
+  font-family: "Open Sans", sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  /*float:left;*/
+}
+margin-bottom: 20px;

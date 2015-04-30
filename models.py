@@ -40,12 +40,10 @@ class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text)
     ownerid = db.Column(db.Integer)
-    visibility = db.Column(db.Text)
 
-    def __init__(self, name, ownerid, visibility):
+    def __init__(self, name, ownerid):
         self.name=name
 	self.ownerid=ownerid
-	self.visibility=visibility
 
     def __repr__(self):
 	return '<Album %r>' % self.id

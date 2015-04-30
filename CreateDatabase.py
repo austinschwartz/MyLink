@@ -16,6 +16,9 @@ db.session.add(User("Mary's Cousin", "juana@mary.org", "drugsarebad", "alsonotma
 db.session.add(Friend(1, 2, "a"))
 db.session.add(Friend(2, 1, "a"))
 
+db.session.add(Friend(2, 3, "a"))
+db.session.add(Friend(3, 2, "a"))
+
 db.session.add(Friend(5, 1, "a"))
 db.session.add(Friend(1, 5, "a"))
 
@@ -24,6 +27,9 @@ db.session.add(Friend(3, 1, "a")) # 3 has pending request from 1
 
 db.session.add(Friend(1, 4, "a")) 
 db.session.add(Friend(4, 1, "a"))
+
+db.session.add(Friend(2, 7, "a")) 
+db.session.add(Friend(7, 2, "a"))
 
 # circlename circleid ownerid userid
 db.session.add(Circle("George's Friends", 1, 1, 2))
@@ -60,10 +66,10 @@ db.session.add(Picture("image-105.jpg", 5 ))
 db.session.add(Picture("image-106.jpg", 5 ))
 # text ownerid albumid circleid createdate(optional)
 db.session.add(Post("George is a communist, don't believe his lies!", 2, 4, 3, date(1943, 3, 13)))
-db.session.add(Post("Life is a box of chocolates", 2, 3, 1, date.today() - timedelta(days=500)))
-db.session.add(Post("Life is fun", 1, 2, 1, date.today() - timedelta(days=5)))
+db.session.add(Post("Life is a box of chocolates", 2, -1, 1, date.today() - timedelta(days=500)))
+db.session.add(Post("Life is fun", 5, -1, -1, date.today() - timedelta(days=5)))
 db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 2, date.today() - timedelta(days=3)))
-db.session.add(Post("Today I ate something, pictures enclosed", 1, 1, 1, date.today() - timedelta(days=1)))
+db.session.add(Post("This is a sample post, no album included", 6, -1, -1, date.today() - timedelta(days=1)))
 
 db.session.commit()
 

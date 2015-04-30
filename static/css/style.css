@@ -1,10 +1,13 @@
-/* Space out content a bit */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+html {
+}
+
 body {
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
 .footer {
@@ -12,12 +15,10 @@ body {
   padding-left: 15px;
 }
 
-/* Custom page header */
 .header {
   padding-bottom: 20px;
   border-bottom: 1px solid #e5e5e5;
 }
-/* Make the masthead heading the same height as the navigation */
 .header h3 {
   margin-top: 0;
   margin-bottom: 0;
@@ -98,4 +99,64 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+
+.post {
+  background-color: #A5D7F5;
+  border-radius: 10px;
+  height: 105px;
+  margin-top: 21px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 11px;
+  padding: 10 10 0 0;
+  color: #5F859B;
+  font-weight: bold;
+}
+
+
+.post img {
+  float:left;
+  width: 85px;
+  height: 85px;
+  margin-top: 0px;
+  margin-left: 10px;
+  border-radius:50%;
+}
+
+
+body div.t {
+  font-size: 12px;
+  margin-top: 0px;
+}
+
+body span.date {
+  float: right;
+}
+
+
+body span.name {
+  float: left;
+  user-select: initial;
+  margin-left: 15px;
+}
+
+body div.a {
+  margin-top: -10px;
+  float:right;
+}
+
+body div.b {
+  margin-left: 110px;
+  color: black;
+  font-size: 12px;
+  margin-top: 4px;
+  width: 400px;
+  height: 65px;
+  overflow: hidden;
+  user-select: initial;
+}
+
+body span.text {
+  overflow: hidden;
 }

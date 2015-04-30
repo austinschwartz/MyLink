@@ -85,19 +85,29 @@ def index():
             posttext = form.textbox.data
             form.textbox.data = ""
             multiple = request.values.getlist('multiple')
-            print posttext +  "going to these circles: " +  str(multiple)
-            # NOTE : ADD ALBUMS NOTE NOTE NOTE NOTE NOTE
+            #print posttext +  "going to these circles: " +  str(multiple)
             if len(multiple) == 0: # add to all friends
-                post = Post(posttext, session['id'], 1, -1, datetime.datetime.now())
+                post = Post(posttext, session['id'], -1, -1, datetime.datetime.now())
                 db.session.add(post)
                 allPosts.append(post)
             currenttime = datetime.datetime.now()
             for cid in multiple:
-                post = Post(posttext, session['id'], 1, int(cid), currenttime)
+                post = Post(posttext, session['id'], -1, int(cid), currenttime)
                 db.session.add(post)
                 allPosts.append(post)
             db.session.commit()
-        return render_template('index.html', friends=friendUsers, owncircles = owncircles, circles=circles, posts = allPosts, form = form)
+
+        users = User.query.order_by(User.id).all()
+        albums = Album.query.order_by(Album.id).all()
+        print users
+        return render_template('index.html', 
+                friends = friendUsers, 
+                owncircles = owncircles, 
+                circles = circles, 
+                posts = allPosts,
+                users = users,
+                albums = albums,
+                form = form)
 
 ## Users
 @app.route('/user/<userid>', methods=['GET', 'POST'])

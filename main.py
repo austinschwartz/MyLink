@@ -173,14 +173,15 @@ def profile():
         form = EditProfileForm()
         if request.method == 'POST':
             if form.validate() == False:
-                return render_template('profile.html', form=form, title='profile')
+                return render_template('profile.html', form=form, title='profile', user=user)
             else:
                 user = User.query.filter_by(email=session['email']).first()
-                user.password = form.password.data
+                if len(form.password.data) > 0:
+                    user.password = form.password.data
+                user.name = form.name.data
                 db.session.commit()
             return redirect(url_for('index'))
         user = User.query.filter_by(email=session['email']).first()
-        #form.password = user.password
 
         return render_template('profile.html', form=form, title='profile', user=user)
     
@@ -386,7 +387,6 @@ def album(albumid): # no default here, error if there is no albumid
 
 @app.route('/albums')
 def albums():
-    
     return render_template('albums.html', albums = Album.query.all(), title='albums')
 
 

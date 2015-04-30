@@ -1,16 +1,46 @@
 from flask import Flask, render_template, session, redirect, url_for, escape, request, send_from_directory, abort
+from flask.ext.mail import Message, Mail
 #from flask.ext.storage.local import LocalStorage
 from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm, PostForm, DeleteCircleForm, AddFriendToCircleForm
 from models import db, User, Album, Picture, Post, Friend, Circle
 import os
 import datetime
 from operator import attrgetter
+from itsdangerous import URLSafeTimedSerializer
+import smtplib
 
 app = Flask(__name__, static_url_path='/static')
 #app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
 #app.config['UPLOADS_FOLDER'] = os.path.realpath('.') + '/static/'
 #app.config['FILE_SYSTEM_STORAGE_FILE_VIEW'] = 'static'
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_TLS = False,
+    MAIL_USE_SSL= True,
+    MAIL_USERNAME = 'mylink321@gmail.com',
+    MAIL_PASSWORD = 'thisworks'
+)
+
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer('mylink')
+    return serializer.dumps(email, salt = 'mylink+')
+
+def confirm_token(token, expiration=6400):
+    serializer = URLSafeTimedSerializer('mylink')
+    try:
+        email = serializer.loads( token, salt = 'mylink+', max_age = expiration)
+    except:
+	return False
+    
+    return email
+
+def send_email(to, subject, template):
+    msg = Message(subject, recipients=[to], html=template, sender="mylink321@gmail.com")
+    mail = Mail(app)
+    mail.send(msg)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -29,6 +59,8 @@ def blank():
 def index():
     if 'email' not in session:
         return login('Please log in first')
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
     else:
         friends = Friend.query.filter_by(userid = session['id'])
         friendUsers = []
@@ -121,6 +153,8 @@ def index():
 def user(userid):
     if 'email' not in session:
        return render_template('user.html', user = User.query.filter_by(id = userid).first()) 
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
 
     form = RequestFriendForm()
     #friends = Friend.query.filter_by(userid = session['id'], state = "a", friendid=userid)
@@ -158,13 +192,16 @@ def user(userid):
 
 @app.route('/users')
 def users():
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
+
     return render_template('users.html', users = User.query.all(), title="users")
 
 @app.route('/profile', methods=['GET','POST'])
 def profile():
     if 'email' not in session:
         return redirect(url_for('login'))
-
+   
     user = User.query.filter_by(email = session['email']).first()
 
     if user is None:
@@ -174,18 +211,47 @@ def profile():
         if request.method == 'POST':
             if form.validate() == False:
                 return render_template('profile.html', form=form, title='profile', user=user)
-            else:
+            elif form.submit.data is True:
                 user = User.query.filter_by(email=session['email']).first()
                 if len(form.password.data) > 0:
                     user.password = form.password.data
                 user.name = form.name.data
                 db.session.commit()
+	    elif form.verify.data is True:
+		token = generate_confirmation_token(session['email'])
+                confirm_url = url_for('confirm', token=token, _external=True)
+    		html = render_template('confirm.html', confirm_url=confirm_url)
+		subject = "Mylink: confirm email"
+		send_email(session['email'], subject, html)
+		return render_template('verificationsent.html')
+
             return redirect(url_for('index'))
         user = User.query.filter_by(email=session['email']).first()
 
         return render_template('profile.html', form=form, title='profile', user=user)
     
+## verify
+@app.route('/verify')
+def verify():
+    return render_template('verify.html', title='verify')
 
+## verify with token
+@app.route('/confirm/<token>')
+def confirm(token):
+    try:
+	email = confirm_token(token)
+    except:
+	flash('verification is invalid')
+	return redirect(url_for('profile'))
+    
+    user = User.query.filter_by(id=session['id']).first()
+    user.verified = "True"
+    db.session.commit()   
+    session['verify']="True"
+    return render_template('thankyou.html')
+
+
+    
 ## Posts
 @app.route('/post/<int:postid>')
 def post(postid): # no default here, error if there is no postid
@@ -193,6 +259,11 @@ def post(postid): # no default here, error if there is no postid
 
 @app.route('/posts')
 def posts():
+    if 'email' not in session:
+        return redirect(url_for('login')) 
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
+
     form = PostForm()
     return render_template('posts.html', posts = Post.query.all(), title='posts', form=form)
 
@@ -201,6 +272,8 @@ def posts():
 def requests():
     if 'email' not in session:
         return redirect(url_for('login'))
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -237,6 +310,8 @@ def requests():
 def createcircle():
     if 'email' not in session:
         return login('Please log in first')
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -276,6 +351,9 @@ def createcircle():
 def circle(circleid):
     if 'email' not in session:
         return login('Please log in first')
+
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -342,6 +420,8 @@ def circle(circleid):
 def circles():
     if 'email' not in session:
         return login( error='Please log in')
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
 
     user = User.query.filter_by(email = session['email']).first()
 
@@ -387,6 +467,9 @@ def album(albumid): # no default here, error if there is no albumid
 
 @app.route('/albums')
 def albums():
+    if session['verify'] == "False":
+	return redirect(url_for('verify'))
+
     return render_template('albums.html', albums = Album.query.all(), title='albums')
 
 
@@ -403,6 +486,7 @@ def login(error=''):
         else:
             session['email'] = form.email.data
 	    session['id'] =  User.query.filter_by(email = form.email.data).first().id
+	    session['verify'] = User.query.filter_by(email = form.email.data).first().verified
             return redirect(url_for('index'))
     elif request.method == 'GET':
         return render_template('login.html', form=form, title='login', error=error)
@@ -414,6 +498,7 @@ def logout():
 
     session.pop('email', None)
     session.pop('id', None)
+    session.pop('verify',None)
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -429,6 +514,7 @@ def signup():
             db.session.commit()
             session['email'] = user.email
 	    session['id'] =  User.query.filter_by(email = session['email']).first().id
+	    session['verify'] = user.verified
             return redirect(url_for('profile'))
     elif request.method == 'GET':
         return render_template('register.html', form = form, title='register')

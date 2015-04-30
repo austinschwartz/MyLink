@@ -52,6 +52,7 @@ class EditProfileForm(Form):
   password = PasswordField('', [])
   name = TextField('', [])
   submit = SubmitField('')
+  verify = SubmitField('')
  
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)

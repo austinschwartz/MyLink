@@ -3,6 +3,8 @@ from flask import Flask, render_template, session, redirect, url_for, escape, re
 from forms import RegisterForm, LoginForm, EditProfileForm, RequestFriendForm, AcceptDenyForm, CreateCircleForm, PostForm, DeleteCircleForm, AddFriendToCircleForm
 from models import db, User, Album, Picture, Post, Friend, Circle
 import os
+import datetime
+from operator import attrgetter
 
 app = Flask(__name__, static_url_path='/static')
 #app.config['DEFAULT_FILE_STORAGE'] = 'filesystem'
@@ -43,21 +45,59 @@ def index():
                 filter(Post.circleid == Circle.circleid).\
                 filter(Circle.userid == session['id']).\
                 group_by(Post.id).all()
+        
+        allFriendPosts = db.session.query(Post, Friend).\
+                filter(Post.ownerid == Friend.friendid).\
+                filter(Friend.userid == session['id']).all()
+        
+        usersPosts = Post.query.filter_by(ownerid = session['id']).all()
+        print usersPosts
+        
+        allPosts = []
+        for post in posts:
+            for thing in post:
+                if isinstance(thing, Post):
+                    allPosts.append(thing)
+        
+        for allFriendPost in allFriendPosts:
+            for thing in allFriendPost:
+                if isinstance(thing, Post):
+                    allPosts.append(thing)
+        
+        for usersPost in usersPosts:
+            allPosts.append(usersPost)
+
+        print allPosts
+    
+        allPosts = list(set(allPosts))
+        sorted(allPosts, key=attrgetter('createdate'))
+
 
         form = PostForm(request.values)
 
         choices = []
-        choices.append((-1, 'All Friends'))
+        #choices.append((-1, 'All Friends'))
         for circle in owncircles:
             choices.append((circle.circleid, circle.circlename))
 
         form.multiple.choices = choices
         if request.method == 'POST':
-            name = form.textbox.data
+            posttext = form.textbox.data
+            form.textbox.data = ""
             multiple = request.values.getlist('multiple')
-            print name +  "going to these circles: " +  str(multiple)
-        
-        return render_template('index.html', friends=friendUsers, owncircles = owncircles, circles=circles, posts = posts, form = form)
+            print posttext +  "going to these circles: " +  str(multiple)
+            # NOTE : ADD ALBUMS NOTE NOTE NOTE NOTE NOTE
+            if len(multiple) == 0: # add to all friends
+                post = Post(posttext, session['id'], 1, -1, datetime.datetime.now())
+                db.session.add(post)
+                allPosts.append(post)
+            currenttime = datetime.datetime.now()
+            for cid in multiple:
+                post = Post(posttext, session['id'], 1, int(cid), currenttime)
+                db.session.add(post)
+                allPosts.append(post)
+            db.session.commit()
+        return render_template('index.html', friends=friendUsers, owncircles = owncircles, circles=circles, posts = allPosts, form = form)
 
 ## Users
 @app.route('/user/<userid>', methods=['GET', 'POST'])

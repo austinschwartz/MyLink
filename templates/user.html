@@ -2,18 +2,28 @@
 
 {% block content %}
   <h1>#{{ user.id }} {{ user.name }}</h1>
-  <img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:200px"/>
-  <span>{{ user.email }}</span>
+  <div class="user">
+    {% if user.picture != "" %}
+    <img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:200px"/>
+    {% else %}
+    <img src="/images/users/default.png" style="width: 200px"/>
+    {% endif %}
+    <span>{{ user.email }}</span>
+  </div>
 
+  <div = "acceptfriend">
   {% if form %}
-  <td><form action="{{ url_for('user', userid = user.id) }}" method=post> 
-	{% if isFriend != True %}
-  {{ form.submit }}
-	{% elif acceptedFriends == True %}
-	{{ form.remove }}
-	{% endif %}
-  </form></td>
+  <td>
+    <form action="{{ url_for('user', userid = user.id) }}" method=post> 
+    {% if isFriend != True %}
+    {{ form.submit }}
+    {% elif acceptedFriends == True %}
+    {{ form.remove }}
+    {% endif %}
+    </form>
+  </td>
   {% endif %}
+  </div>
 
 {% endblock %}
 

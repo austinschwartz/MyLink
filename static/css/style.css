@@ -4,6 +4,7 @@ html {
 }
 
 body {
+  background-color: white;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -103,14 +104,14 @@ body {
 
 
 .post {
-  background-color: #A5D7F5;
+  background-color: #EEE;
   /*border-radius: 10px;*/
   min-height: 80px;
   max-height: 220px;
   margin-top: 21px;
   font-family: "Open Sans", sans-serif;
   font-size: 11px;
-  color: #5F859B;
+  color: #888888;
   font-weight: bold;
 }
 

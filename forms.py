@@ -49,7 +49,7 @@ class LoginForm(Form):
 
 
 class EditProfileForm(Form):
-  password = PasswordField('', [validators.Required("Please enter a password.")])
+  password = PasswordField('', [])
   name = TextField('', [])
   submit = SubmitField('')
  

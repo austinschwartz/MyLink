@@ -11,7 +11,11 @@
   {% for user in users %}
     <tr>
       <td><a href="/user/{{ user.id }}">{{ user.id }}</a></td>
+      {% if user.picture != "" %}
       <td><img src="/images/users/{{ user.id }}/{{ user.picture }}" style="width:100px"/></td>
+      {% else %}
+      <td><img src="/images/users/default.png" style="width:100px"/></td>
+      {% endif %}
       <td>{{ user.email }}</td>
       <td>{{ user.name }}</td>
     </tr>

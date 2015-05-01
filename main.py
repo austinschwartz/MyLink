@@ -77,13 +77,19 @@ def index():
                 filter(Post.circleid == Circle.circleid).\
                 filter(Circle.userid == session['id']).\
                 group_by(Post.id).all()
-        
+        #print "posts"
+        #print posts
+
         allFriendPosts = db.session.query(Post, Friend).\
+                filter(Post.circleid == -1).\
                 filter(Post.ownerid == Friend.friendid).\
                 filter(Friend.userid == session['id']).all()
-        
+        #print "allposts"
+        #print allFriendPosts
+
         usersPosts = Post.query.filter_by(ownerid = session['id']).all()
         
+
         allPosts = []
         for post in posts:
             for thing in post:
@@ -100,8 +106,8 @@ def index():
     
         allPosts = list(set(allPosts))
         sorted(allPosts, key=attrgetter('createdate'))
-        for podst in allPosts:
-            print podst.text
+        #for podst in allPosts:
+        #    print podst.text
 
         form = PostForm(request.values)
 
@@ -380,7 +386,7 @@ def createcircle():
 
 
 # Circle
-@app.route('/circle/<circleid>', methods={'GET','POST'})
+@app.route('/circle/<int:circleid>', methods={'GET','POST'})
 def circle(circleid):
     if 'email' not in session:
         return login('Please log in first')
@@ -423,7 +429,8 @@ def circle(circleid):
 	if 'submit' in request.form:
 	    print form.checkbox.data
 	    for box in form.checkbox.data:
-		query = Circle.query.filter_by(circleid=circleid, ownerid=session['id'], userid=box).first()
+                print box
+		query = Circle.query.filter_by(circleid=circleid, ownerid=session['id'], userid=int(box)).first()
 		if query is None:
 		    circle = Circle(circle.circlename, circleid, session['id'], box)
 		    db.session.add(circle)
@@ -438,13 +445,13 @@ def circle(circleid):
 		    #if query.userid not in form.checkbox.data:
 		#	db.session.delete(query)
 	     #db.session.commit()
-    
     users_in_circle = Circle.query.filter_by(circleid = circleid)
-
+    print users_in_circle
+    print data
     for _user in users_in_circle:
 	dataid = User.query.filter_by(id = _user.userid).first().id
 	data.append(unicode(dataid))
-
+    
     form.checkbox.data = data
     return render_template('circle.html', title = 'circle', form = form, circleid = circleid, friendslist = friendslist, circle = circle)
 
@@ -565,8 +572,7 @@ def upload():
 def image(albumid, filename):
     album = Album.query.filter_by(id = albumid).first()
     ownerid = album.ownerid
-
-    # forbidden if user not logged in and album isnt public
+    
     if 'email' not in session:
         abort(403)
 

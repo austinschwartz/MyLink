@@ -38,12 +38,14 @@
             {% endif %}
             <a href='/albums'>Albums</a></li>
 -->
+<!--
             {% if title == "posts" %}
             <li class='active'>
             {% else %}
             <li>
             {% endif %}
             <a href='/posts'>Posts</a></li>
+-->
 
             {% if title == "requests" %}
             <li class='active'>
@@ -102,9 +104,10 @@
           {% endblock %}
       </div>
       <footer class="footer">
-        <p>session:</p>
+        <p>Made by Austin Schwartz and Joey Rapala</p>
+        <!--<p>session:</p>
         <p>{{ session|tojson }}</p>
-          users in db should be "george@gmail.com : abc123", "mary@gmail.com : mary123"
+        users in db should be "george@gmail.com : abc123", "mary@gmail.com : mary123" -->
       </footer>
       </div>
   </body>

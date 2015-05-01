@@ -5,12 +5,12 @@
  
 <table class="table">
   <tr>
-    <th>circle name</th>
-    <th>delete?</th>
+<!--    <th>circle name</th>
+  <th>delete?</th> -->
   </tr>
   {% for circle in circles %}
     <tr>
-      <td><a href="/circle/{{ circle.circlename }}">{{ circle.circlename }}</a></td>
+      <td><a href="/circle/{{ circle.circleid }}">{{ circle.circlename }}</a></td>
       <td><form action="{{ url_for('circles') }}" method = post>
 	{{ delete_circle_form.delete }}
 	{{ delete_circle_form.hidden(value = circle.circleid) }}

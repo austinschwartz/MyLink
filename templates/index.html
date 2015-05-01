@@ -5,10 +5,10 @@
 
 <div class='col-lg-12'>
   <form action="{{ url_for('index') }}" method = "post" enctype="multipart/form-data">
-    <div class='col-md-3'>
+    <div class='col-md-4'>
       {{ render_field(form.multiple, class='form-control') }}
     </div>
-    <div class='col-md-6'>
+    <div class='col-md-5'>
       {{ render_field(form.textbox, id='inputTextArea', class='form-control', placeholder='Post') }}
       <div class='col-md-6 col-md-offset-3'>
       {{ render_field(form.submit, class='btn btn-md', value='Post') }}
@@ -27,7 +27,11 @@
     <div class='post'>
       <div class="above">
         <div class="img">
+          {% if users[post.ownerid - 1].picture != '' %}
           <img src="/images/users/{{ post.ownerid }}/{{ users[post.ownerid - 1].picture }}" class="face"/>
+          {% else %}
+          <img src="/images/users/default.png" class="face"/>
+          {% endif %}
         </div>
         <div class='t'>
           <a href="/user/{{ post.ownerid }}">

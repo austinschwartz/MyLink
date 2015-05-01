@@ -97,10 +97,11 @@ def index():
         
         for usersPost in usersPosts:
             allPosts.append(usersPost)
-
     
         allPosts = list(set(allPosts))
         sorted(allPosts, key=attrgetter('createdate'))
+        for podst in allPosts:
+            print podst.text
 
         form = PostForm(request.values)
 
@@ -131,8 +132,6 @@ def index():
 
                 for file in files:
                     filename = secure_filename(file.filename)
-                    print filename
-                    print aid
                     dirpath = os.path.join(UPLOAD_FOLDER, 'albums/' + str(aid))
                     try:
                         os.mkdir(dirpath)
@@ -149,17 +148,28 @@ def index():
             if len(multiple) == 0: # add to all friends
                 post = Post(posttext, session['id'], aid, -1, datetime.datetime.now())
                 db.session.add(post)
+                db.session.commit()
+                post = db.session.query(Post).order_by(Post.id.desc()).first()
                 allPosts.append(post)
             currenttime = datetime.datetime.now()
             for cid in multiple:
                 post = Post(posttext, session['id'], aid, int(cid), currenttime)
                 db.session.add(post)
+                db.session.commit()
+                post = db.session.query(Post).order_by(Post.id.desc()).first()
                 allPosts.append(post)
             db.session.commit()
 
         users = User.query.order_by(User.id).all()
         albums = Album.query.order_by(Album.id).all()
         pictures = Picture.query.order_by(Picture.id).all()
+        friendModels = Friend.query.all()
+        friendList = []
+        for friend in friendModels:
+            if friend.userid == session['id'] and friend.state == 'a':
+                friendList.append(int(friend.id))
+        friendList.append(int(session['id']))
+
         return render_template('index.html', 
                 friends = friendUsers, 
                 owncircles = owncircles, 
@@ -168,6 +178,7 @@ def index():
                 users = users,
                 albums = albums,
                 pictures = pictures,
+                friendList = friendList,
                 form = form)
 
 ## Users

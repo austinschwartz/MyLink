@@ -364,7 +364,8 @@ def createcircle():
     form.multiple.choices = choices
     if request.method == 'POST':
         name = request.values.get('name')
-
+	if name == "":
+	    name = "No Name"
 	multiple = request.values.getlist('multiple')
 	
         maxidtup = db.session.query(db.func.max(Circle.circleid)).first()
